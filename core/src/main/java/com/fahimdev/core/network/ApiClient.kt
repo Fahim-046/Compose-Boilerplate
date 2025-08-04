@@ -1,4 +1,4 @@
-package com.fahimdev.composeboilerplate.core.network
+package com.fahimdev.core.network
 
 import com.fahimdev.composeboilerplate.BuildConfig
 import okhttp3.OkHttpClient
