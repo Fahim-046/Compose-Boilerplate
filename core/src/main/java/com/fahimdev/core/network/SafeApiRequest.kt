@@ -36,7 +36,7 @@ object SafeApiRequest {
 //            if (BuildConfig.DEBUG) {
 //                Log.d("Network Error", "Network Error: ${e.localizedMessage}")
 //            }
-            ApiResult.NetworkError
+            ApiResult.NetworkError(e.localizedMessage ?: "Network Error")
 
         } catch (e: Exception) {
             Log.d("Network Error", "Unexpected Error: ${e.localizedMessage}")
