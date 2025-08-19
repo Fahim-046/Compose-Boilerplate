@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    id("kotlin-kapt")
 }
 
 android {
@@ -39,9 +41,20 @@ dependencies {
     implementation(libs.material)
     // Retrofit
     implementation(libs.retrofit)
+    // Gson
     implementation (libs.converter.gson)
+    // OkHttp
     implementation (libs.okhttp.logging.interceptor)
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+kapt {
+    correctErrorTypes = true
+    useBuildCache = false
 }

@@ -31,15 +31,15 @@ object SafeApiRequest {
             }
 
         } catch (e: IOException) {
-            if (BuildConfig.DEBUG) {
-                Log.d("Network Error", "Network Error: ${e.localizedMessage}")
-            }
+//            if (BuildConfig.DEBUG) {
+//                Log.d("Network Error", "Network Error: ${e.localizedMessage}")
+//            }
             ApiResult.NetworkError
 
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG) {
-                Log.d("Network Error", "Unexpected Error: ${e.localizedMessage}")
-            }
+//            if (BuildConfig.DEBUG) {
+//                Log.d("Network Error", "Unexpected Error: ${e.localizedMessage}")
+//            }
             ApiResult.Error(e.localizedMessage ?: "Unknown Error")
         }
     }

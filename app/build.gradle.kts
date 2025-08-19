@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -63,6 +63,12 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // Retrofit + OkHttp
     implementation(libs.retrofit)
@@ -72,6 +78,12 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+
+    // Coil
+    implementation(libs.coil.compose)
+
+    // Timber
+    implementation(libs.timber)
 
     // Testing
     testImplementation(libs.junit)
