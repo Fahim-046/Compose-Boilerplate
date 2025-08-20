@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "880395694721",
+    "project_id": "compose-boilerplate",
+    "storage_bucket": "compose-boilerplate.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:880395694721:android:b20d9bd672c462d09ad380",
+        "android_client_info": {
+          "package_name": "com.fahimdev.composeboilerplate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyR05CFs3yzSvcR8nBVoDMD70DZmn3lR4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
