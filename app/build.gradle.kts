@@ -53,6 +53,46 @@ android {
         }
     }
 
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.dev", ""))
+            resValue("string", "api_key", localProperties.getProperty("api.key.dev", ""))
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.dev", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.dev", "")}\"")
+
+        }
+        create("qa") {
+            dimension = "env"
+            applicationIdSuffix = ".qa"
+            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.qa", ""))
+            resValue("string", "api_key", localProperties.getProperty("api.key.qa", ""))
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.qa", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.qa", "")}\"")
+
+        }
+        create("staging") {
+            dimension = "env"
+            applicationIdSuffix = ".staging"
+            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.staging", ""))
+            resValue("string", "api_key", localProperties.getProperty("api.key.staging", ""))
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.staging", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.staging", "")}\"")
+
+        }
+        create("prod") {
+            dimension = "env"
+            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.prod", ""))
+            resValue("string", "api_key", localProperties.getProperty("api.key.prod", ""))
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.prod", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.prod", "")}\"")
+
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
