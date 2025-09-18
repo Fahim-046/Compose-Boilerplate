@@ -1,6 +1,6 @@
 package com.fahimdev.core.network
 
-import com.fahimdev.composeboilerplate.BuildConfig
+//import com.fahimdev.composeboilerplate.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -12,13 +12,13 @@ class ApiClient {
         private fun buildClient(): OkHttpClient {
             val builder = OkHttpClient.Builder()
 
-            if (BuildConfig.DEBUG) {
-                builder.addInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }
-                )
-            }
+//            if (BuildConfig.DEBUG) {
+//                builder.addInterceptor(
+//                    HttpLoggingInterceptor().apply {
+//                        level = HttpLoggingInterceptor.Level.BODY
+//                    }
+//                )
+//            }
 
             builder.addInterceptor { chain ->
                 val request = chain.request().newBuilder()
