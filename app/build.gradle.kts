@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
     id("kotlin-kapt")
     id("com.google.gms.google-services")
 }
@@ -25,12 +26,12 @@ val localProperties = loadLocalProperties()
 
 android {
     namespace = "com.fahimdev.composeboilerplate"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.fahimdev.composeboilerplate"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -128,6 +129,12 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Navigation 3
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.kotlinx.serialization.core)
 
     // Retrofit + OkHttp
     implementation(libs.retrofit)
