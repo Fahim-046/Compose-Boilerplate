@@ -11,7 +11,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationScreen
+import com.fahimdev.composeboilerplate.presentation.naivgation.NavigationRoot
+import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
 import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +26,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isDarkTheme by viewModel.isDarkModeEnabled.collectAsState()
             ComposeBoilerplateTheme(darkTheme = isDarkTheme) {
-                AuthenticationScreen()
+                NavigationRoot(
+                    onLanguageChange = {
+
+                    },
+                    onAppearanceChange = {
+                        viewModel.onThemeChanged(it == AppearanceTheme.DARK)
+                    }
+                )
             }
         }
     }
