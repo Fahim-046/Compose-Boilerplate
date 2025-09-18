@@ -1,1 +1,76 @@
-/build
+# Gradle
+.gradle/
+build/
+**/build/
+
+# Local configuration files
+local.properties
+*.iml
+.idea/
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Generated files
+captures/
+output.json
+
+# Log files
+*.log
+
+# Keystore files (do not store sensitive keys in git)
+*.jks
+*.keystore
+
+# Android Profiling
+*.hprof
+
+# IntelliJ / Android Studio
+.idea/gradle.xml
+.idea/misc.xml
+.idea/compiler.xml
+.idea/jarRepositories.xml
+.idea/vcs.xml
+
+# Kotlin
+*.kotlin_module
+
+# Jetpack Compose compiler generated
+**/compose-compiler-report/
+**/compose-metrics/
+**/compose-reports/
+
+# NDK / CMake
+.cxx/
+.externalNativeBuild/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Firebase / Google Services
+google-services.json
+GoogleService-Info.plist
+
+# APK / AAB / IPA
+*.apk
+*.ap_
+*.aab
+*.ipa
+
+# Crashlytics
+crashlytics-build.properties
+fabric.properties
+
+# Other
+.idea/deploymentTargetDropDown.xml
