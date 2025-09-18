@@ -12,7 +12,20 @@
           "package_name": "com.fahimdev.composeboilerplate"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "880395694721-hruq3lagehl4n2f8uktjen42cql1kcba.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fahimdev.composeboilerplate",
+            "certificate_hash": "f832d2cc1598792514deb1e81152b714739a1a84"
+          }
+        },
+        {
+          "client_id": "880395694721-r8gg987t3p1dbim2m8kr29mfracpojli.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAyR05CFs3yzSvcR8nBVoDMD70DZmn3lR4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "880395694721-r8gg987t3p1dbim2m8kr29mfracpojli.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

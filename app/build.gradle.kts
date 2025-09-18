@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +9,19 @@ plugins {
     id("kotlin-kapt")
     id("com.google.gms.google-services")
 }
+
+fun loadLocalProperties(): Properties {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        FileInputStream(localPropertiesFile).use { fis ->
+            properties.load(fis)
+        }
+    }
+    return properties
+}
+
+val localProperties = loadLocalProperties()
 
 android {
     namespace = "com.fahimdev.composeboilerplate"
@@ -19,6 +35,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id", "")}\"")
     }
 
     buildTypes {
@@ -86,8 +104,6 @@ dependencies {
     // Timber
     implementation(libs.timber)
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
