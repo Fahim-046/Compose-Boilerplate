@@ -20,6 +20,21 @@ class AuthenticationViewModel @Inject constructor(
     fun onEvent(event: AuthenticationEvents) {
         when (event) {
             is AuthenticationEvents.SignInWithGoogle -> signInWithGoogle()
+            is AuthenticationEvents.OnEmailChange -> {
+                states.value = states.value.copy(email = event.email)
+            }
+
+            is AuthenticationEvents.OnPasswordChange -> {
+                states.value = states.value.copy(password = event.password)
+            }
+
+            is AuthenticationEvents.OnPasswordVisibilityChange -> {
+                states.value = states.value.copy(isPasswordVisible = event.isPasswordVisible)
+            }
+
+            is AuthenticationEvents.SignInWithFacebook -> TODO()
+            AuthenticationEvents.SignIn -> TODO()
+            AuthenticationEvents.SignUp -> TODO()
         }
     }
 

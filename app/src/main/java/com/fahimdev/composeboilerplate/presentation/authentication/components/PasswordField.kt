@@ -1,5 +1,6 @@
 package com.fahimdev.composeboilerplate.presentation.authentication.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PasswordField(value: String, onValueChange: (String) -> Unit) {
+fun PasswordField(value: String, onValueChange: (String) -> Unit, onPasswordVisibilityChange: (Boolean) -> Unit, isPasswordVisible: Boolean) {
     Text(
         "Password",
         style = MaterialTheme.typography.labelLarge.copy(
@@ -32,8 +33,10 @@ fun PasswordField(value: String, onValueChange: (String) -> Unit) {
     )
     Spacer(modifier = Modifier.height(8.dp))
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = value,
+        onValueChange = {
+            onValueChange(it)
+        },
         placeholder = { Text("Password") },
         leadingIcon = {
             Icon(
@@ -43,8 +46,11 @@ fun PasswordField(value: String, onValueChange: (String) -> Unit) {
         },
         trailingIcon = {
             Icon(
-                imageVector = if (true) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-                contentDescription = "Show Password"
+                imageVector = if (isPasswordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                contentDescription = "Show Password",
+                modifier = Modifier.clickable {
+                    onPasswordVisibilityChange(!isPasswordVisible)
+                }
             )
         },
         colors = TextFieldDefaults.colors(

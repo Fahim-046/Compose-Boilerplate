@@ -29,8 +29,10 @@ fun EmailField(value: String, onValueChange: (String) -> Unit) {
     )
     Spacer(modifier = Modifier.height(8.dp))
     OutlinedTextField(
-        value = "",
-        onValueChange = {},
+        value = value,
+        onValueChange = {
+            onValueChange(it)
+        },
         placeholder = { Text("Email") },
         leadingIcon = {
             Icon(

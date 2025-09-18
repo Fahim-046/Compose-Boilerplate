@@ -49,12 +49,36 @@ fun AuthenticationScreen(viewModel: AuthenticationViewModel = hiltViewModel()) {
     AuthenticationScreenSkeleton(
         signInWithGoogle = {
             viewModel.onEvent(AuthenticationEvents.SignInWithGoogle)
+        },
+        showToast = { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        },
+        email = states.email,
+        password = states.password,
+        isPasswordVisible = states.isPasswordVisible,
+        onEmailChange = {
+            viewModel.onEvent(AuthenticationEvents.OnEmailChange(it))
+        },
+        onPasswordChange = {
+            viewModel.onEvent(AuthenticationEvents.OnPasswordChange(it))
+        },
+        onPasswordVisibilityChange = {
+            viewModel.onEvent(AuthenticationEvents.OnPasswordVisibilityChange(it))
         }
     )
 }
 
 @Composable
-fun AuthenticationScreenSkeleton(signInWithGoogle: () -> Unit) {
+fun AuthenticationScreenSkeleton(
+    signInWithGoogle: () -> Unit,
+    showToast: (String) -> Unit,
+    email: String,
+    password: String,
+    isPasswordVisible: Boolean,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onPasswordVisibilityChange: (Boolean) -> Unit
+) {
     BaseScreen(title = "Authentication", showTopBar = false) {
         Column(
             modifier = Modifier
@@ -78,13 +102,25 @@ fun AuthenticationScreenSkeleton(signInWithGoogle: () -> Unit) {
                 signInWithGoogle()
             })
             Spacer(modifier = Modifier.padding(8.dp))
-            FacebookSignInButton(onPressed = {})
+            FacebookSignInButton(onPressed = {
+                showToast("Facebook sign in is not implemented yet")
+            })
             Spacer(modifier = Modifier.height(24.dp))
             SectionDivider()
             Spacer(modifier = Modifier.height(24.dp))
-            EmailField(value = "", onValueChange = {})
+            EmailField(value = email, onValueChange = {
+                onEmailChange(it)
+            })
             Spacer(modifier = Modifier.height(24.dp))
-            PasswordField(value = "", onValueChange = {})
+            PasswordField(
+                value = password, onValueChange = {
+                    onPasswordChange(it)
+                },
+                onPasswordVisibilityChange = {
+                    onPasswordVisibilityChange(it)
+                },
+                isPasswordVisible = isPasswordVisible
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 "Forgot password?",
@@ -98,7 +134,9 @@ fun AuthenticationScreenSkeleton(signInWithGoogle: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(
-                onClick = {},
+                onClick = {
+                    showToast("Sign in is not implemented yet")
+                },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -118,7 +156,15 @@ fun AuthenticationScreenSkeleton(signInWithGoogle: () -> Unit) {
 @Composable
 private fun AuthenticationScreenPreview() {
     ComposeBoilerplateTheme {
-        AuthenticationScreenSkeleton(signInWithGoogle = {})
+        AuthenticationScreenSkeleton(
+            signInWithGoogle = {},
+            showToast = {},
+            email = "",
+            password = "",
+            isPasswordVisible = false,
+            onEmailChange = {},
+            onPasswordChange = {},
+            onPasswordVisibilityChange = {})
     }
 }
 
@@ -126,6 +172,14 @@ private fun AuthenticationScreenPreview() {
 @Composable
 private fun AuthenticationScreenPreviewDark() {
     ComposeBoilerplateTheme {
-        AuthenticationScreenSkeleton(signInWithGoogle = {})
+        AuthenticationScreenSkeleton(
+            signInWithGoogle = {},
+            showToast = {},
+            email = "",
+            password = "",
+            isPasswordVisible = false,
+            onEmailChange = {},
+            onPasswordChange = {},
+            onPasswordVisibilityChange = {})
     }
 }
