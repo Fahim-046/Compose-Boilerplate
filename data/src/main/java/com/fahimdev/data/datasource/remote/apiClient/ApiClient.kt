@@ -29,7 +29,7 @@ class ApiClient(
 ) {
     val client = HttpClient(OkHttp) {
         install(Logging) {
-            level = LogLevel.ALL
+            level = LogLevel.BODY
         }
 
         install(ContentNegotiation) {
