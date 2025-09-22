@@ -3,7 +3,8 @@ agp = "8.10.1"
 coilCompose = "2.7.0"
 datastorePreferences = "1.1.6"
 firebaseBom = "34.1.0"
-hiltAndroid = "2.51.1"
+hiltAndroid = "2.53"
+ksp = "2.0.21-1.0.25"
 kotlin = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -24,7 +25,7 @@ hiltNavigation = "1.2.0"
 firebaseAuthKtx = "24.0.1"
 nav3Core = "1.0.0-alpha01"
 lifecycleViewmodelNav3 = "1.0.0-alpha01"
-kotlinSerialization = "2.1.21"
+kotlinSerialization = "2.0.21"
 kotlinxSerializationCore = "1.8.1"
 
 [libraries]
@@ -75,5 +76,6 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroid" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 # Optional plugins
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerialization"}
