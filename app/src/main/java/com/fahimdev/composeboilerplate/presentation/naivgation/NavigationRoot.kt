@@ -10,6 +10,7 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationScreen
+import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListScreen
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsScreen
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
@@ -21,7 +22,7 @@ fun NavigationRoot(
     onLanguageChange: (Languages) -> Unit,
     onAppearanceChange: (AppearanceTheme) -> Unit
 ) {
-    val backStack = rememberNavBackStack(Screen.Authentication)
+    val backStack = rememberNavBackStack(Screen.MovieList)
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
@@ -36,7 +37,7 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
-                        AuthenticationScreen()
+                        MovieListScreen()
                     }
                 }
 
@@ -45,6 +46,14 @@ fun NavigationRoot(
                         key = key
                     ) {
                         AuthenticationScreen()
+                    }
+                }
+
+                is Screen.MovieList -> {
+                    NavEntry(
+                        key = key
+                    ) {
+                        MovieListScreen()
                     }
                 }
 

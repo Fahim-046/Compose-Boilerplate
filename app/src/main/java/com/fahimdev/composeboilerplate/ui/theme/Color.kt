@@ -2,75 +2,75 @@ package com.fahimdev.composeboilerplate.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Light Theme Colors - Clean & Modern
-val LightPrimary = Color(0xFF6C5CE7)           // Soft Purple (matches your screenshot)
+// Light Theme Colors
+val LightPrimary = Color(0xFFE97D27)     // Warm orange/amber (oklch(0.45 0.25 25))
 val LightOnPrimary = Color(0xFFFFFFFF)
-val LightPrimaryContainer = Color(0xFFF1F0FF)  // Very Light Purple
-val LightOnPrimaryContainer = Color(0xFF2D1B69)
+val LightPrimaryContainer = Color(0xFFFFEBD8)
+val LightOnPrimaryContainer = Color(0xFF341200)
 
-val LightSecondary = Color(0xFF74B9FF)         // Soft Blue
-val LightOnSecondary = Color(0xFFFFFFFF)
-val LightSecondaryContainer = Color(0xFFE8F4FF) // Light Blue
-val LightOnSecondaryContainer = Color(0xFF0C2D48)
+val LightSecondary = Color(0xFFE6E6E6)   // Soft gray
+val LightOnSecondary = Color(0xFF1A1A1A)
+val LightSecondaryContainer = Color(0xFFF5F5F5)
+val LightOnSecondaryContainer = Color(0xFF333333)
 
-val LightTertiary = Color(0xFF00B894)          // Mint Green
-val LightOnTertiary = Color(0xFFFFFFFF)
-val LightTertiaryContainer = Color(0xFFE8FFF7)  // Light Mint
-val LightOnTertiaryContainer = Color(0xFF003A2F)
+val LightTertiary = Color(0xFFB3B3B3)    // Neutral gray for tertiary
+val LightOnTertiary = Color(0xFF1A1A1A)
+val LightTertiaryContainer = Color(0xFFEAEAEA)
+val LightOnTertiaryContainer = Color(0xFF2A2A2A)
 
-val LightError = Color(0xFFE17055)             // Soft Red
+val LightError = Color(0xFFD32F2F)
 val LightErrorContainer = Color(0xFFFFEDEA)
 val LightOnError = Color(0xFFFFFFFF)
 val LightOnErrorContainer = Color(0xFF5A1A0B)
 
-val LightBackground = Color(0xFFFDFDFE)        // Pure White
-val LightOnBackground = Color(0xFF1A1A1A)      // Dark Gray
-val LightSurface = Color(0xFFFFFFFF)           // White Surface
-val LightOnSurface = Color(0xFF1A1A1A)
+val LightBackground = Color(0xFFFAFAFA) // Near white (oklch(0.98 0 0))
+val LightOnBackground = Color(0xFF262626) // Dark charcoal (oklch(0.15 0 0))
+val LightSurface = Color(0xFFF2F2F2)    // Light gray card (oklch(0.95 0 0))
+val LightOnSurface = Color(0xFF262626)
 
-val LightSurfaceVariant = Color(0xFFF5F5F7)    // Light Gray
-val LightOnSurfaceVariant = Color(0xFF4A4A4A)  // Medium Gray
-val LightOutline = Color(0xFFD1D1D6)           // Border Gray
-val LightOutlineVariant = Color(0xFFE5E5EA)    // Light Border
+val LightSurfaceVariant = Color(0xFFE0E0E0) // Accent gray
+val LightOnSurfaceVariant = Color(0xFF4A4A4A)
+val LightOutline = Color(0xFFD9D9D9)        // Border gray
+val LightOutlineVariant = Color(0xFFE5E5EA)
 
-val LightSurfaceContainer = Color(0xFFFAFAFC)
+val LightSurfaceContainer = Color(0xFFFDFDFD)
 val LightSurfaceContainerHigh = Color(0xFFF5F5F7)
 val LightSurfaceContainerHighest = Color(0xFFEFEFF4)
 
-// Dark Theme Colors - Matches Your Screenshot
-val DarkPrimary = Color(0xFF8B7CF6)            // Purple accent (like in screenshot)
-val DarkOnPrimary = Color(0xFF1A0B3D)          // Very Dark Purple
-val DarkPrimaryContainer = Color(0xFF3C2E72)   // Dark Purple Container
-val DarkOnPrimaryContainer = Color(0xFFF1F0FF)
+// Dark Theme Colors
+val DarkPrimary = Color(0xFFFF922E)     // Bright orange/amber (oklch(0.70 0.28 25))
+val DarkOnPrimary = Color(0xFF1A1A1A)
+val DarkPrimaryContainer = Color(0xFF3A1E00)
+val DarkOnPrimaryContainer = Color(0xFFFFEBD8)
 
-val DarkSecondary = Color(0xFF60A5FA)          // Blue accent
-val DarkOnSecondary = Color(0xFF0B1426)        // Very Dark Blue
-val DarkSecondaryContainer = Color(0xFF1E3A5F) // Dark Blue Container
-val DarkOnSecondaryContainer = Color(0xFFE8F4FF)
+val DarkSecondary = Color(0xFF1F1F1F)   // Darker gray (oklch(0.12 0 0))
+val DarkOnSecondary = Color(0xFFE0E0E0)
+val DarkSecondaryContainer = Color(0xFF2A2A2A)
+val DarkOnSecondaryContainer = Color(0xFFF5F5F5)
 
-val DarkTertiary = Color(0xFF34D399)           // Green accent
-val DarkOnTertiary = Color(0xFF0B2817)         // Very Dark Green
-val DarkTertiaryContainer = Color(0xFF1F4A37)  // Dark Green Container
-val DarkOnTertiaryContainer = Color(0xFFE8FFF7)
+val DarkTertiary = Color(0xFF333333)    // Neutral tertiary
+val DarkOnTertiary = Color(0xFFF5F5F5)
+val DarkTertiaryContainer = Color(0xFF404040)
+val DarkOnTertiaryContainer = Color(0xFFEAEAEA)
 
-val DarkError = Color(0xFFF87171)              // Red accent
-val DarkErrorContainer = Color(0xFF7F1D1D)     // Dark Red Container
-val DarkOnError = Color(0xFF1A0606)            // Very Dark Red
+val DarkError = Color(0xFFF87171)
+val DarkErrorContainer = Color(0xFF7F1D1D)
+val DarkOnError = Color(0xFFFFFFFF)
 val DarkOnErrorContainer = Color(0xFFFFEDEA)
 
-val DarkBackground = Color(0xFF0F0F0F)         // Very Dark (like screenshot)
-val DarkOnBackground = Color(0xFFF8F9FA)       // Light Text
-val DarkSurface = Color(0xFF1A1A1A)            // Dark Surface (card background)
-val DarkOnSurface = Color(0xFFF8F9FA)          // Light Text on Surface
+val DarkBackground = Color(0xFF080808)  // Deep black (oklch(0.03 0 0))
+val DarkOnBackground = Color(0xFFF9F9F9) // Near white (oklch(0.98 0 0))
+val DarkSurface = Color(0xFF101010)     // Dark gray card (oklch(0.06 0 0))
+val DarkOnSurface = Color(0xFFF9F9F9)
 
-val DarkSurfaceVariant = Color(0xFF2A2A2A)     // Medium Dark Surface
-val DarkOnSurfaceVariant = Color(0xFFB0B0B0)  // Medium Light Text
-val DarkOutline = Color(0xFF3A3A3A)           // Dark Border (like screenshot)
-val DarkOutlineVariant = Color(0xFF2A2A2A)    // Darker Border
+val DarkSurfaceVariant = Color(0xFF262626) // Dark accent gray
+val DarkOnSurfaceVariant = Color(0xFFB0B0B0)
+val DarkOutline = Color(0xFF333333)        // Dark border
+val DarkOutlineVariant = Color(0xFF2A2A2A)
 
-val DarkSurfaceContainer = Color(0xFF171717)   // Container Background
-val DarkSurfaceContainerHigh = Color(0xFF1F1F1F) // Higher Container
-val DarkSurfaceContainerHighest = Color(0xFF262626) // Highest Container
+val DarkSurfaceContainer = Color(0xFF171717)
+val DarkSurfaceContainerHigh = Color(0xFF1F1F1F)
+val DarkSurfaceContainerHighest = Color(0xFF262626)
 
 // Extended Colors - Professional & Clean
 object ExtendedColors {

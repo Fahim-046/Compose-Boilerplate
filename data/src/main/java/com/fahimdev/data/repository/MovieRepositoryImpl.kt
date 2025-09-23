@@ -2,6 +2,7 @@ package com.fahimdev.data.repository
 
 import com.fahimdev.data.datasource.remote.apiService.MovieApiService
 import com.fahimdev.data.mapper.MovieMapper
+import com.fahimdev.data.model.MovieResponse
 import com.fahimdev.domain.entities.Movie
 import com.fahimdev.domain.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
@@ -9,11 +10,11 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-    private val apiService: MovieApiService
+    private val movieApiService: MovieApiService
 ) : MovieRepository {
     override suspend fun getMovies(): List<Movie?> = withContext(Dispatchers.IO) {
-        val response = apiService.getMovies()
-        response.map(MovieMapper::mapResponseToDomain)
+        val response = movieApiService.getMovies()
+        response.results.map(MovieMapper::mapResponseToDomain)
     }
 
     override suspend fun getMovieById(id: Int): Movie {

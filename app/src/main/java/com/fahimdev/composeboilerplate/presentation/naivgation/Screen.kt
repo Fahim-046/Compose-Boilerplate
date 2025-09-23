@@ -8,7 +8,7 @@ sealed interface Screen : NavKey {
     data object Splash : Screen
 
     @Serializable
-    data object Home : Screen
+    data object MovieList : Screen
 
     @Serializable
     data object Authentication : Screen
