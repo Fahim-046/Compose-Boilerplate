@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.jetbrains.kotlin.serialization)
     alias(libs.plugins.ksp)
-    id("com.google.gms.google-services")
+    // id("com.google.gms.google-services") // Temporarily disabled
 }
 
 fun loadLocalProperties(): Properties {
@@ -110,6 +110,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":shared"))
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(project(":domain"))

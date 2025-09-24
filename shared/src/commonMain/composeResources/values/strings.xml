@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">Compose Boilerplate</string>
+    <string name="welcome_message">Welcome to Compose Multiplatform!</string>
+    <string name="platform_info">Running on: %s</string>
+    <string name="click_me">Click me!</string>
+    <string name="hello_multiplatform">Hello from Compose Multiplatform!</string>
+    <string name="about_title">About</string>
+    <string name="about_description">This is a Compose Multiplatform application that runs on Android, iOS, Desktop, and Web.</string>
+</resources>

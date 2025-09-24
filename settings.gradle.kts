@@ -12,11 +12,12 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         maven(url = uri("https://androidx.dev/snapshots/builds/13508953/artifacts/repository"))
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/wasm/experimental")
     }
 }
 
@@ -25,3 +26,7 @@ include(":app")
 include(":core")
 include(":domain")
 include(":data")
+include(":shared")
+include(":iosApp")
+include(":composeApp-desktop")
+include(":composeApp-web")
