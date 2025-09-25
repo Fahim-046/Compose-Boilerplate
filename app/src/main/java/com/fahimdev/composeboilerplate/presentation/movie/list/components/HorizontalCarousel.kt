@@ -35,7 +35,7 @@ fun HorizontalCarousel(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(350.dp)
     ) {
         HorizontalPager(state = pageState, modifier = Modifier.fillMaxSize()) { index ->
             MovieSlide(movie = movies[index])
@@ -64,8 +64,7 @@ fun HorizontalCarouselPreview() {
             runtime = 200,
             summary = "It is a movie of someone.",
             imdbCode = "8CV65X4"
-        ),
-        Movie(
+        ), Movie(
             id = 1,
             title = "Movie Title",
             coverImage = "https://image.tmdb.org/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg", // TMDB poster
@@ -75,8 +74,7 @@ fun HorizontalCarouselPreview() {
             runtime = 200,
             summary = "It is a movie of someone.",
             imdbCode = "8CV65X4"
-        ),
-        Movie(
+        ), Movie(
             id = 1,
             title = "Movie Title",
             coverImage = "https://image.tmdb.org/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg", // TMDB poster

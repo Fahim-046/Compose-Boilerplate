@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,6 +45,7 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
             model = movie?.coverImage,
             contentDescription = movie?.title,
             contentScale = ContentScale.FillBounds,
+            clipToBounds = true,
             placeholder = painterResource(id = R.drawable.f1_movie),
             modifier = Modifier.fillMaxSize()
         )
@@ -98,7 +100,7 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Icon(
-                    Icons.Outlined.CalendarToday,
+                    Icons.Outlined.CalendarMonth,
                     contentDescription = "Release Date",
                     tint = MaterialTheme.colorScheme.primary
                 )
@@ -118,25 +120,6 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
                 overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                ActionButton(
-                    text = "Watch Trailer",
-                    icon = Icons.Filled.PlayArrow,
-                    isPrimary = true,
-                    onClick = { /* Handle trailer click */ }
-                )
-
-                ActionButton(
-                    text = "More Info",
-                    icon = Icons.Filled.Info,
-                    isPrimary = false,
-                    onClick = { /* Handle more info click */ }
-                )
-            }
-
         }
 
     }

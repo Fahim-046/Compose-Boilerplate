@@ -28,7 +28,7 @@ fun ActionButton(
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(48.dp),
+        modifier = modifier.height(24.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isPrimary)
                 MaterialTheme.colorScheme.primary

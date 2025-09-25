@@ -3,16 +3,24 @@ package com.fahimdev.composeboilerplate.presentation.movie.list
 import androidx.lifecycle.viewModelScope
 import com.fahimdev.composeboilerplate.presentation.base.BaseViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.list.states.MovieListStates
-import com.fahimdev.domain.usecase.GetMovieListUseCase
+import com.fahimdev.domain.usecase.GetPopularMovieListUseCase
+import com.fahimdev.domain.usecase.GetTrendingMovieListUseCase
+import com.fahimdev.domain.usecase.GetUpcomingMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
 class MovieListViewModel @Inject constructor(
-    private val getMovieListUseCase: GetMovieListUseCase
+    private val getTrendingMovieListUseCase: GetTrendingMovieListUseCase,
+    private val getPopularMovieListUseCase: GetPopularMovieListUseCase,
+    private val getUpcomingMovieListUseCase: GetUpcomingMovieListUseCase
 ) : BaseViewModel() {
     val states = MutableStateFlow(MovieListStates())
 
@@ -21,24 +29,28 @@ class MovieListViewModel @Inject constructor(
     }
 
     private fun loadMovieList() = viewModelScope.launch {
-        states.value = states.value.copy(isLoading = true)
-        val movies = getMovieListUseCase.invoke()
+        states.value = states.value.copy(isLoading = true, error = null)
 
-        if (movies.isEmpty()) return@launch
+        try {
+            val trendingDeferred = async { getTrendingMovieListUseCase.invoke() }
+            val popularDeferred = async { getPopularMovieListUseCase.invoke() }
+            val upcomingDeferred = async { getUpcomingMovieListUseCase.invoke() }
 
-        val trendingMovies = movies.filter {
-            (it?.rating ?: 0.0) > 8.0 && (it?.year ?: 0) > Calendar.getInstance().get(Calendar.YEAR)
+            val trending = trendingDeferred.await()
+            val popular = popularDeferred.await()
+            val upcoming = upcomingDeferred.await()
+
+            states.value = MovieListStates(
+                isLoading = false,
+                trendingMovies = trending,
+                popularMovies = popular,
+                upcomingMovies = upcoming
+            )
+        } catch (e: Exception) {
+            states.value = states.value.copy(
+                isLoading = false,
+                error = e.message ?: "Unknown error"
+            )
         }
-
-        val popularMovies = movies.filter {
-            (it?.rating ?: 0.0) > 7.0
-        }
-
-        states.value = states.value.copy(
-            movies = movies,
-            trendingMovies = trendingMovies,
-            popularMovies = popularMovies,
-            isLoading = false
-        )
     }
 }

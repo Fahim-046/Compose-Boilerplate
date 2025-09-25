@@ -2,7 +2,6 @@ package com.fahimdev.data.repository
 
 import com.fahimdev.data.datasource.remote.apiService.MovieApiService
 import com.fahimdev.data.mapper.MovieMapper
-import com.fahimdev.data.model.MovieResponse
 import com.fahimdev.domain.entities.Movie
 import com.fahimdev.domain.repository.MovieRepository
 import kotlinx.coroutines.Dispatchers
@@ -12,9 +11,31 @@ import javax.inject.Inject
 class MovieRepositoryImpl @Inject constructor(
     private val movieApiService: MovieApiService
 ) : MovieRepository {
-    override suspend fun getMovies(): List<Movie?> = withContext(Dispatchers.IO) {
-        val response = movieApiService.getMovies()
-        response.results.map(MovieMapper::mapResponseToDomain)
+    override suspend fun getTrendingMovies(): List<Movie?> = withContext(Dispatchers.IO) {
+        try {
+            val response = movieApiService.getTrendingMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getUpcomingMovies(): List<Movie?> = withContext(Dispatchers.IO){
+        try {
+            val response = movieApiService.getUpcomingMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getPopularMovies(): List<Movie?> {
+        return try {
+            val response = movieApiService.getPopularMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun getMovieById(id: Int): Movie {
