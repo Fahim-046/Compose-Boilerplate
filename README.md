@@ -6,7 +6,7 @@ A modern Android application boilerplate built with **Jetpack Compose** and **Cl
 
 ### 🏗️ Architecture
 - **Clean Architecture** with separation of concerns
-- **MVVM Pattern** with StateFlow and Events
+- **MVI Pattern** with StateFlow and Events
 - **Multi-module structure** for better organization
 - **Dependency Injection** with Hilt
 
@@ -62,7 +62,7 @@ ComposeBoilerplate/
 | Category | Technology |
 |----------|------------|
 | **UI Framework** | Jetpack Compose |
-| **Architecture** | Clean Architecture + MVVM |
+| **Architecture** | Clean Architecture + MVI |
 | **DI** | Hilt |
 | **Navigation** | Navigation Compose 3 |
 | **Networking** | Ktor Client + OkHttp |
