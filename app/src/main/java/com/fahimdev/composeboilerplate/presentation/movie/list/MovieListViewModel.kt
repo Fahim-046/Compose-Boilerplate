@@ -2,6 +2,7 @@ package com.fahimdev.composeboilerplate.presentation.movie.list
 
 import androidx.lifecycle.viewModelScope
 import com.fahimdev.composeboilerplate.presentation.base.BaseViewModel
+import com.fahimdev.composeboilerplate.presentation.movie.list.events.MovieListEvents
 import com.fahimdev.composeboilerplate.presentation.movie.list.states.MovieListStates
 import com.fahimdev.domain.usecase.GetPopularMovieListUseCase
 import com.fahimdev.domain.usecase.GetTrendingMovieListUseCase
@@ -26,6 +27,18 @@ class MovieListViewModel @Inject constructor(
 
     init {
         loadMovieList()
+    }
+
+    fun onEvent(event: MovieListEvents){
+        when(event){
+            is MovieListEvents.OnMovieClick -> {
+
+            }
+
+            is MovieListEvents.OnViewAllClick -> {
+
+            }
+        }
     }
 
     private fun loadMovieList() = viewModelScope.launch {

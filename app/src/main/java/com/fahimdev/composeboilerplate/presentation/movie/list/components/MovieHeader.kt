@@ -3,6 +3,7 @@ package com.fahimdev.composeboilerplate.presentation.movie.list.components
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,7 +55,10 @@ fun MovieHeader(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
                 )
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .padding(horizontal = 8.dp, vertical = 4.dp)
+                .clickable {
+                    action()
+                },
             contentAlignment = Alignment.Center
         ) {
             Text(

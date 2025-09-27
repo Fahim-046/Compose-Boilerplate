@@ -40,6 +40,7 @@ import com.fahimdev.domain.entities.Movie
 @Composable
 fun MovieListScreen(
     modifier: Modifier = Modifier,
+    onViewAllClick: (CategoryType) -> Unit,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
     val states by viewModel.states.collectAsState()
@@ -47,7 +48,10 @@ fun MovieListScreen(
         trendingMovies = states.trendingMovies,
         popularMovies = states.popularMovies,
         upcomingMovies = states.upcomingMovies,
-        isLoading = states.isLoading
+        isLoading = states.isLoading,
+        onViewAllClick = {
+            onViewAllClick(it)
+        }
     )
 }
 
@@ -57,7 +61,8 @@ fun MovieListSkeleton(
     trendingMovies: List<Movie?>,
     popularMovies: List<Movie?>,
     upcomingMovies: List<Movie?>,
-    isLoading: Boolean
+    isLoading: Boolean,
+    onViewAllClick: (CategoryType) -> Unit
 ) {
     BaseScreen(
         title = "CinemaHub", showTopBar = true, showBackArrow = false,
@@ -104,7 +109,9 @@ fun MovieListSkeleton(
 
             if (trendingMovies.isNotEmpty()) {
                 item {
-                    MovieHeader(header = "Trending Now", actionText = "View All") { }
+                    MovieHeader(header = "Trending Now", actionText = "View All") {
+                        onViewAllClick(CategoryType.Trending)
+                    }
                 }
 
                 item {
@@ -140,7 +147,9 @@ fun MovieListSkeleton(
 
             if (popularMovies.isNotEmpty()) {
                 item {
-                    MovieHeader(header = "Popular", actionText = "View All") { }
+                    MovieHeader(header = "Popular", actionText = "View All") {
+                        onViewAllClick(CategoryType.Popular)
+                    }
                 }
 
                 item {
@@ -175,7 +184,9 @@ fun MovieListSkeleton(
 
             if (upcomingMovies.isNotEmpty()) {
                 item {
-                    MovieHeader(header = "Upcoming", actionText = "View All") { }
+                    MovieHeader(header = CategoryType.Upcoming.toName(), actionText = "View All") {
+                        onViewAllClick(CategoryType.Upcoming)
+                    }
                 }
 
                 item {
@@ -210,7 +221,8 @@ private fun MovieListScreenPreview() {
             trendingMovies = emptyList(),
             popularMovies = emptyList(),
             upcomingMovies = emptyList(),
-            isLoading = false
+            isLoading = false,
+            onViewAllClick = {}
         )
     }
 }
@@ -221,12 +233,13 @@ private fun MovieListScreenPreview() {
 )
 @Composable
 private fun MovieListScreenPreviewDark() {
-    ComposeBoilerplateTheme {
+    ComposeBoilerplateTheme(darkTheme = true) {
         MovieListSkeleton(
             trendingMovies = emptyList(),
             popularMovies = emptyList(),
             upcomingMovies = emptyList(),
-            isLoading = false
+            isLoading = false,
+            onViewAllClick = {}
         )
     }
 }
