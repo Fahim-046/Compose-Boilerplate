@@ -1,5 +1,7 @@
 package com.fahimdev.composeboilerplate.presentation.naivgation
 
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +15,6 @@ import com.fahimdev.composeboilerplate.presentation.authentication.Authenticatio
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryScreen
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListScreen
-import com.fahimdev.composeboilerplate.presentation.movie.list.toName
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsScreen
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
@@ -27,7 +28,7 @@ fun NavigationRoot(
 ) {
     val backStack = rememberNavBackStack(Screen.MovieList)
     NavDisplay(
-        modifier = modifier,
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
         backStack = backStack,
         entryDecorators = listOf(
             rememberSavedStateNavEntryDecorator(),
@@ -63,7 +64,8 @@ fun NavigationRoot(
                         MovieListScreen(
                             onViewAllClick = {
                                 backStack.add(Screen.MovieCategory(it))
-                            }
+                            },
+                            navBackStack = backStack
                         )
                     }
                 }
@@ -80,7 +82,8 @@ fun NavigationRoot(
                             onLanguageSelected = {
                                 onLanguageChange(it)
                             },
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            navBackStack = backStack
                         )
                     }
                 }

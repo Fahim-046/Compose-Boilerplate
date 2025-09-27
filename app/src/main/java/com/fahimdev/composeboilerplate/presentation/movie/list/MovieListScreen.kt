@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation3.runtime.NavBackStack
 import com.fahimdev.composeboilerplate.presentation.base.BaseScreen
 import com.fahimdev.composeboilerplate.presentation.movie.list.components.HorizontalCarousel
 import com.fahimdev.composeboilerplate.presentation.movie.list.components.MovieHeader
@@ -41,6 +42,7 @@ import com.fahimdev.domain.entities.Movie
 fun MovieListScreen(
     modifier: Modifier = Modifier,
     onViewAllClick: (CategoryType) -> Unit,
+    navBackStack: NavBackStack? = null,
     viewModel: MovieListViewModel = hiltViewModel()
 ) {
     val states by viewModel.states.collectAsState()
@@ -49,6 +51,7 @@ fun MovieListScreen(
         popularMovies = states.popularMovies,
         upcomingMovies = states.upcomingMovies,
         isLoading = states.isLoading,
+        navBackStack = navBackStack,
         onViewAllClick = {
             onViewAllClick(it)
         }
@@ -62,10 +65,15 @@ fun MovieListSkeleton(
     popularMovies: List<Movie?>,
     upcomingMovies: List<Movie?>,
     isLoading: Boolean,
+    navBackStack: NavBackStack? = null,
     onViewAllClick: (CategoryType) -> Unit
 ) {
     BaseScreen(
-        title = "CinemaHub", showTopBar = true, showBackArrow = false,
+        title = "CinemaHub",
+        showTopBar = true,
+        showBackArrow = false,
+        showBottomNavigation = navBackStack != null,
+        navBackStack = navBackStack,
         topBar = {
             PrimaryTopBar(
                 title = "CinemaHub",

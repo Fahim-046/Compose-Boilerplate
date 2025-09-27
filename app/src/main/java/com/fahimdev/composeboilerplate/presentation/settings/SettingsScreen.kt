@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation3.runtime.NavBackStack
 import com.fahimdev.composeboilerplate.presentation.base.BaseScreen
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
 import com.fahimdev.composeboilerplate.presentation.settings.components.LanguageAndAppearance
@@ -27,6 +28,7 @@ import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
 fun SettingsScreen(
     onLanguageSelected: (Languages) -> Unit = {},
     onAppearanceSelected: (AppearanceTheme) -> Unit = {},
+    navBackStack: NavBackStack? = null,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     var selectedLanguage by remember { mutableStateOf(Languages.ENGLISH) }
@@ -36,6 +38,7 @@ fun SettingsScreen(
         isDarkTheme = isDarkModeEnabled == AppearanceTheme.DARK,
         selectedLanguage = selectedLanguage,
         selectedAppearance = selectedAppearance,
+        navBackStack = navBackStack,
         onLanguageSelected = {
             selectedLanguage = it
         },
@@ -52,6 +55,7 @@ fun SettingsScreenSkeleton(
     isDarkTheme: Boolean,
     selectedLanguage: Languages,
     selectedAppearance: AppearanceTheme,
+    navBackStack: NavBackStack? = null,
     onLanguageSelected: (Languages) -> Unit = {},
     onAppearanceSelected: (AppearanceTheme) -> Unit = {}
 ) {
@@ -59,6 +63,8 @@ fun SettingsScreenSkeleton(
         title = "Settings",
         showTopBar = true,
         showBackArrow = false,
+        showBottomNavigation = navBackStack != null,
+        navBackStack = navBackStack,
         topBar = {
             PrimaryTopBar(
                 title = "Settings",

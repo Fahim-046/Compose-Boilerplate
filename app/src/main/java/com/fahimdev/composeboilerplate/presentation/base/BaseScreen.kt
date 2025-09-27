@@ -16,19 +16,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavBackStack
 import com.fahimdev.composeboilerplate.ui.components.dialog.LoadingDialog
+import com.fahimdev.composeboilerplate.ui.components.navigation.BottomNavigationBar
 
 @Composable
 fun BaseScreen(
     title: String,
     viewModel: BaseViewModel = BaseViewModel(),
     navHostController: NavHostController = rememberNavController(),
+    navBackStack: NavBackStack? = null,
     showTopBar: Boolean = true,
     showBackArrow: Boolean = true,
     topBar: @Composable () -> Unit = {
 
     },
     showBottomBar: Boolean = false,
+    showBottomNavigation: Boolean = false,
     bottomBar: @Composable () -> Unit = {},
     screenContent: @Composable () -> Unit
 ) {
@@ -60,7 +64,14 @@ fun BaseScreen(
 
     Scaffold(
         topBar = { if (showTopBar) topBar() },
-        bottomBar = { if (showBottomBar) bottomBar() },
+        bottomBar = {
+            when {
+                showBottomNavigation && navBackStack != null -> {
+                    BottomNavigationBar(backStack = navBackStack)
+                }
+                showBottomBar -> bottomBar()
+            }
+        },
         snackbarHost = { SnackbarHost(snackBarHostState) },
         modifier = Modifier.statusBarsPadding()
     ) { innerPadding ->
