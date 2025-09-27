@@ -3,7 +3,7 @@ package com.fahimdev.composeboilerplate
 import androidx.lifecycle.viewModelScope
 import com.fahimdev.composeboilerplate.presentation.base.BaseViewModel
 import com.fahimdev.core.manager.DataStoreManager
-import com.fahimdev.domain.usecase.GetMovieListUseCase
+import com.fahimdev.domain.usecase.GetTrendingMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -11,14 +11,13 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(private val dataStoreManager: DataStoreManager, private val getMovieListUseCase: GetMovieListUseCase) :
+class MainActivityViewModel @Inject constructor(private val dataStoreManager: DataStoreManager, private val getTrendingMovieListUseCase: GetTrendingMovieListUseCase) :
     BaseViewModel() {
     private val _isDarkModeEnabled = MutableStateFlow(false)
     val isDarkModeEnabled get() = _isDarkModeEnabled
 
     init {
         onLoadTheme()
-        loadMovies()
     }
 
     private fun onLoadTheme() = viewModelScope.launch {
@@ -28,13 +27,5 @@ class MainActivityViewModel @Inject constructor(private val dataStoreManager: Da
 
     fun onThemeChanged(enabled: Boolean) = viewModelScope.launch{
         _isDarkModeEnabled.value = enabled
-    }
-
-    fun loadMovies() = viewModelScope.launch {
-        val movies = getMovieListUseCase.invoke()
-
-        if(movies.isNotEmpty()){
-            Timber.d("Movies: $movies")
-        }
     }
 }

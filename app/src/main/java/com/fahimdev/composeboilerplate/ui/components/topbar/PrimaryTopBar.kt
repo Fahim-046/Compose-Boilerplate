@@ -92,9 +92,9 @@ fun PrimaryTopBar(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    description?.let {
+                    if(description != null){
                         Text(
-                            text = it,
+                            text = description,
                             style = MaterialTheme.typography.bodySmall,
                             color = contentColor.copy(alpha = 0.7f), // Use contentColor parameter consistently
                             maxLines = 1,

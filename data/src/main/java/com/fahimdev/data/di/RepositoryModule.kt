@@ -34,7 +34,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(apiService: MovieApiService): MovieRepository{
-        return MovieRepositoryImpl(apiService = apiService)
+    fun provideMovieRepository(movieApiService: MovieApiService): MovieRepository{
+        return MovieRepositoryImpl(movieApiService = movieApiService)
     }
 }

@@ -9,11 +9,33 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-    private val apiService: MovieApiService
+    private val movieApiService: MovieApiService
 ) : MovieRepository {
-    override suspend fun getMovies(): List<Movie?> = withContext(Dispatchers.IO) {
-        val response = apiService.getMovies()
-        response.map(MovieMapper::mapResponseToDomain)
+    override suspend fun getTrendingMovies(): List<Movie?> = withContext(Dispatchers.IO) {
+        try {
+            val response = movieApiService.getTrendingMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getUpcomingMovies(): List<Movie?> = withContext(Dispatchers.IO){
+        try {
+            val response = movieApiService.getUpcomingMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun getPopularMovies(): List<Movie?> {
+        return try {
+            val response = movieApiService.getPopularMovies()
+            response.results.map(MovieMapper::mapResponseToDomain)
+        } catch (e: Exception) {
+            emptyList()
+        }
     }
 
     override suspend fun getMovieById(id: Int): Movie {

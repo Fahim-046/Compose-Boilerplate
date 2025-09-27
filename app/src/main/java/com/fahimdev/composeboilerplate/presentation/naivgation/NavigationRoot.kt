@@ -10,6 +10,10 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationScreen
+import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryScreen
+import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryViewModel
+import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListScreen
+import com.fahimdev.composeboilerplate.presentation.movie.list.toName
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsScreen
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
@@ -21,7 +25,7 @@ fun NavigationRoot(
     onLanguageChange: (Languages) -> Unit,
     onAppearanceChange: (AppearanceTheme) -> Unit
 ) {
-    val backStack = rememberNavBackStack(Screen.Authentication)
+    val backStack = rememberNavBackStack(Screen.MovieList)
     NavDisplay(
         modifier = modifier,
         backStack = backStack,
@@ -36,7 +40,11 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
-                        AuthenticationScreen()
+                        MovieListScreen(
+                            onViewAllClick = {
+                                backStack.add(Screen.MovieCategory(it))
+                            }
+                        )
                     }
                 }
 
@@ -45,6 +53,18 @@ fun NavigationRoot(
                         key = key
                     ) {
                         AuthenticationScreen()
+                    }
+                }
+
+                is Screen.MovieList -> {
+                    NavEntry(
+                        key = key
+                    ) {
+                        MovieListScreen(
+                            onViewAllClick = {
+                                backStack.add(Screen.MovieCategory(it))
+                            }
+                        )
                     }
                 }
 
@@ -60,6 +80,19 @@ fun NavigationRoot(
                             onLanguageSelected = {
                                 onLanguageChange(it)
                             },
+                            viewModel = viewModel
+                        )
+                    }
+                }
+
+                is Screen.MovieCategory -> {
+                    NavEntry(
+                        key = key
+                    ) {
+                        val viewModel: MovieCategoryViewModel = hiltViewModel()
+                        MovieCategoryScreen(
+                            type = key.type,
+                            onNavigateBack = { backStack.removeLastOrNull() },
                             viewModel = viewModel
                         )
                     }
