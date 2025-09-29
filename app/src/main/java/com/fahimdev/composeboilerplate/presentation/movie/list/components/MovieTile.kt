@@ -85,9 +85,7 @@ fun MovieTile(modifier: Modifier = Modifier, movie: Movie?) {
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-
-                            text = movie?.rating?.toString()
-                                ?.let { it.substring(0, it.indexOf('.') + 2) } ?: "",
+                            text = movie?.rating?.let { "%.1f".format(it) } ?: "",
                             style = MaterialTheme.typography.bodySmall.copy(
                                 color = MaterialTheme.colorScheme.onSurface
                             )

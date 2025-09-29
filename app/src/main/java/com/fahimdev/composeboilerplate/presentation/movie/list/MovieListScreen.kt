@@ -2,35 +2,25 @@ package com.fahimdev.composeboilerplate.presentation.movie.list
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import com.fahimdev.composeboilerplate.presentation.base.BaseScreen
 import com.fahimdev.composeboilerplate.presentation.movie.list.components.HorizontalCarousel
+import com.fahimdev.composeboilerplate.presentation.movie.list.components.MovieGrid
 import com.fahimdev.composeboilerplate.presentation.movie.list.components.MovieHeader
-import com.fahimdev.composeboilerplate.presentation.movie.list.components.MovieSlide
-import com.fahimdev.composeboilerplate.presentation.movie.list.components.MovieTile
 import com.fahimdev.composeboilerplate.ui.components.shimmer.MovieHeaderShimmer
 import com.fahimdev.composeboilerplate.ui.components.shimmer.MovieTileShimmer
 import com.fahimdev.composeboilerplate.ui.components.shimmer.ShimmerEffect
@@ -81,17 +71,13 @@ fun MovieListSkeleton(
             )
         },
     ) {
-        val trending = if (trendingMovies.size > 4) trendingMovies.take(4) else trendingMovies
-        val popular = if (popularMovies.size > 4) popularMovies.take(4) else popularMovies
-        val upcoming = if (upcomingMovies.size > 4) upcomingMovies.take(4) else upcomingMovies
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
+            item(key = "carousel") {
                 Column {
                     if (isLoading || trendingMovies.isEmpty()) {
                         ShimmerEffect(
@@ -100,7 +86,7 @@ fun MovieListSkeleton(
                                 .height(350.dp)
                         )
                     } else {
-                        HorizontalCarousel(movies = trendingMovies.take(4))
+                        HorizontalCarousel(movies = trendingMovies)
                     }
                 }
             }
@@ -122,24 +108,8 @@ fun MovieListSkeleton(
                     }
                 }
 
-                item {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                            .height(
-                                (trending.size / 2 + trending.size % 2) * 320.dp +
-                                        ((trending.size / 2 + trending.size % 2) - 1) * 16.dp
-                            )
-                            .padding(16.dp),
-                        userScrollEnabled = false
-                    ) {
-                        items(trending) { movie ->
-                            MovieTile(movie = movie)
-                        }
-
-                    }
+                item(key = "trending_grid") {
+                    MovieGrid(movies = trendingMovies)
                 }
             }
 
@@ -160,23 +130,8 @@ fun MovieListSkeleton(
                     }
                 }
 
-                item {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                            .height(
-                                (popular.size / 2 + popular.size % 2) * 320.dp +
-                                        ((popular.size / 2 + popular.size % 2) - 1) * 16.dp
-                            )
-                            .padding(16.dp),
-                        userScrollEnabled = false
-                    ) {
-                        items(popular) { movie ->
-                            MovieTile(movie = movie)
-                        }
-                    }
+                item(key = "popular_grid") {
+                    MovieGrid(movies = popularMovies)
                 }
             }
 
@@ -197,24 +152,8 @@ fun MovieListSkeleton(
                     }
                 }
 
-                item {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        modifier = Modifier
-                            .height(
-                                (upcoming.size / 2 + upcoming.size % 2) * 320.dp +
-                                        ((upcoming.size / 2 + upcoming.size % 2) - 1) * 16.dp
-                            )
-                            .padding(16.dp),
-                        userScrollEnabled = false
-                    ) {
-                        items(upcoming) { movie ->
-                            MovieTile(movie = movie)
-                        }
-
-                    }
+                item(key = "upcoming_grid") {
+                    MovieGrid(movies = upcomingMovies)
                 }
             }
         }
@@ -251,4 +190,6 @@ private fun MovieListScreenPreviewDark() {
         )
     }
 }
+
+
 

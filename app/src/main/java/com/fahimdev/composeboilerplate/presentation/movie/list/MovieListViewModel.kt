@@ -10,9 +10,8 @@ import com.fahimdev.domain.usecase.GetUpcomingMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -23,7 +22,8 @@ class MovieListViewModel @Inject constructor(
     private val getPopularMovieListUseCase: GetPopularMovieListUseCase,
     private val getUpcomingMovieListUseCase: GetUpcomingMovieListUseCase
 ) : BaseViewModel() {
-    val states = MutableStateFlow(MovieListStates())
+    private val _states = MutableStateFlow(MovieListStates())
+    val states: StateFlow<MovieListStates> = _states.asStateFlow()
 
     init {
         loadMovieList()
@@ -42,7 +42,7 @@ class MovieListViewModel @Inject constructor(
     }
 
     private fun loadMovieList() = viewModelScope.launch {
-        states.value = states.value.copy(isLoading = true, error = null)
+        _states.value = _states.value.copy(isLoading = true, error = null)
 
         try {
             val trendingDeferred = async { getTrendingMovieListUseCase.invoke() }
@@ -53,14 +53,14 @@ class MovieListViewModel @Inject constructor(
             val popular = popularDeferred.await()
             val upcoming = upcomingDeferred.await()
 
-            states.value = MovieListStates(
+            _states.value = MovieListStates(
                 isLoading = false,
-                trendingMovies = trending,
-                popularMovies = popular,
-                upcomingMovies = upcoming
+                trendingMovies = if(trending.size > 4) trending.take(4) else trending,
+                popularMovies = if(popular.size > 4) popular.take(4) else popular,
+                upcomingMovies = if(upcoming.size > 4) upcoming.take(4) else upcoming
             )
         } catch (e: Exception) {
-            states.value = states.value.copy(
+            _states.value = _states.value.copy(
                 isLoading = false,
                 error = e.message ?: "Unknown error"
             )

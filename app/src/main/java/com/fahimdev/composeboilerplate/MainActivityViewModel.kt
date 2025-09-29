@@ -7,25 +7,21 @@ import com.fahimdev.domain.usecase.GetTrendingMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel @Inject constructor(private val dataStoreManager: DataStoreManager, private val getTrendingMovieListUseCase: GetTrendingMovieListUseCase) :
-    BaseViewModel() {
-    private val _isDarkModeEnabled = MutableStateFlow(false)
+class MainActivityViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager,
+) : BaseViewModel() {
+
+    private val _isDarkModeEnabled = MutableStateFlow(
+        runBlocking { dataStoreManager.getBoolean("dark_mode") ?: false }
+    )
     val isDarkModeEnabled get() = _isDarkModeEnabled
 
-    init {
-        onLoadTheme()
-    }
-
-    private fun onLoadTheme() = viewModelScope.launch {
-        val isDarkMode = dataStoreManager.getBoolean("dark_mode") ?: false
-        _isDarkModeEnabled.value = isDarkMode
-    }
-
-    fun onThemeChanged(enabled: Boolean) = viewModelScope.launch{
+    fun onThemeChanged(enabled: Boolean) = viewModelScope.launch {
         _isDarkModeEnabled.value = enabled
+        dataStoreManager.saveBoolean("dark_mode", enabled)
     }
 }
