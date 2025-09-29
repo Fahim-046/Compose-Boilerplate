@@ -7,21 +7,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.CalendarToday
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -40,6 +36,20 @@ import com.fahimdev.domain.entities.Movie
 
 @Composable
 fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
+    val gradientBrush = remember {
+        Brush.verticalGradient(
+            colors = listOf(
+                Color.Transparent,
+                Color.Black.copy(alpha = 0.3f),
+                Color.Black.copy(alpha = 0.8f)
+            )
+        )
+    }
+
+    val ratingText = remember(movie?.rating) {
+        movie?.rating?.let { "%.1f".format(it) } ?: ""
+    }
+
     Box(modifier = modifier.fillMaxSize()) {
         AsyncImage(
             model = movie?.coverImage,
@@ -53,17 +63,7 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            Color.Black.copy(alpha = 0.3f),
-                            Color.Black.copy(alpha = 0.8f)
-                        ),
-                        startY = 0f,
-                        endY = Float.POSITIVE_INFINITY
-                    )
-                )
+                .background(gradientBrush)
         )
 
         Column(
@@ -72,9 +72,9 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
                 .padding(horizontal = 24.dp, vertical = 64.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(movie?.genres?.size ?: 0) {
-                    GenreTag(genre = movie?.genres?.get(it) ?: "")
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                movie?.genres?.take(3)?.forEach { genre ->
+                    GenreTag(genre = genre)
                 }
             }
             Text(
@@ -95,7 +95,7 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = movie?.rating?.let { ((it * 10).toInt() / 10.0).toString() } ?: "",
+                    text = ratingText,
                     style = MaterialTheme.typography.titleMedium.copy(color = Color.White)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
@@ -122,24 +122,5 @@ fun MovieSlide(modifier: Modifier = Modifier, movie: Movie?) {
             Spacer(modifier = Modifier.height(16.dp))
         }
 
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun MovieSlidePreview() {
-    ComposeBoilerplateTheme {
-        val dummyMovie = Movie(
-            id = 1,
-            title = "Movie Title",
-            coverImage = "https://image.tmdb.org/t/p/w500/8uO0gUM8aNqYLs1OsTBQiXu0fEv.jpg", // TMDB poster
-            year = 2018,
-            rating = 8.0,
-            genres = listOf("Action", "Adventure", "Comedy"),
-            runtime = 200,
-            summary = "It is a movie of someone.",
-            imdbCode = "8CV65X4"
-        )
-        MovieSlide(movie = dummyMovie)
     }
 }
