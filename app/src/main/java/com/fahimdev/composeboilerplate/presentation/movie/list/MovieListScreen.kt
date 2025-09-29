@@ -27,13 +27,14 @@ import com.fahimdev.composeboilerplate.ui.components.shimmer.ShimmerEffect
 import com.fahimdev.composeboilerplate.ui.components.topbar.PrimaryTopBar
 import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
 import com.fahimdev.domain.entities.Movie
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MovieListScreen(
     modifier: Modifier = Modifier,
     onViewAllClick: (CategoryType) -> Unit,
     navBackStack: NavBackStack? = null,
-    viewModel: MovieListViewModel = hiltViewModel()
+    viewModel: MovieListViewModel = koinViewModel()
 ) {
     val states by viewModel.states.collectAsState()
     MovieListSkeleton(
