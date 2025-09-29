@@ -12,13 +12,16 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationScreen
+import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryScreen
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListScreen
+import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsScreen
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
 import com.fahimdev.composeboilerplate.presentation.settings.components.Languages
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavigationRoot(
@@ -53,7 +56,10 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
-                        AuthenticationScreen()
+                        val viewModel: AuthenticationViewModel = koinViewModel()
+                        AuthenticationScreen(
+                            viewModel = viewModel
+                        )
                     }
                 }
 
@@ -61,11 +67,13 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
+                        val viewModel: MovieListViewModel = koinViewModel()
                         MovieListScreen(
                             onViewAllClick = {
                                 backStack.add(Screen.MovieCategory(it))
                             },
-                            navBackStack = backStack
+                            navBackStack = backStack,
+                            viewModel = viewModel
                         )
                     }
                 }
@@ -74,7 +82,7 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
-                        val viewModel: SettingsViewModel = hiltViewModel()
+                        val viewModel: SettingsViewModel = koinViewModel()
                         SettingsScreen(
                             onAppearanceSelected = {
                                 onAppearanceChange(it)
@@ -92,7 +100,7 @@ fun NavigationRoot(
                     NavEntry(
                         key = key
                     ) {
-                        val viewModel: MovieCategoryViewModel = hiltViewModel()
+                        val viewModel: MovieCategoryViewModel = koinViewModel()
                         MovieCategoryScreen(
                             type = key.type,
                             onNavigateBack = { backStack.removeLastOrNull() },

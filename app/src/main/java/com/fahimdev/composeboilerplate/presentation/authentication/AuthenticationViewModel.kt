@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class AuthenticationViewModel @Inject constructor(
+class AuthenticationViewModel(
     private val authRepository: AuthRepository
 ) : BaseViewModel() {
     val states = MutableStateFlow(AuthenticationStates())

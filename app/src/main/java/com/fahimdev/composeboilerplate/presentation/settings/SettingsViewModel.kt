@@ -9,8 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class SettingsViewModel @Inject constructor(private val dataStoreManager: DataStoreManager): BaseViewModel(){
+class SettingsViewModel(private val dataStoreManager: DataStoreManager): BaseViewModel(){
     private val _isDarkModeEnabled = MutableStateFlow(AppearanceTheme.LIGHT)
     val isDarkModeEnabled = _isDarkModeEnabled
     init {

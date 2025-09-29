@@ -16,8 +16,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
-@HiltViewModel
-class MovieListViewModel @Inject constructor(
+class MovieListViewModel(
     private val getTrendingMovieListUseCase: GetTrendingMovieListUseCase,
     private val getPopularMovieListUseCase: GetPopularMovieListUseCase,
     private val getUpcomingMovieListUseCase: GetUpcomingMovieListUseCase

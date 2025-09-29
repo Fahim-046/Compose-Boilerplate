@@ -34,9 +34,12 @@ import com.fahimdev.composeboilerplate.presentation.authentication.components.Si
 import com.fahimdev.composeboilerplate.presentation.authentication.events.AuthenticationEvents
 import com.fahimdev.composeboilerplate.presentation.base.BaseScreen
 import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AuthenticationScreen(viewModel: AuthenticationViewModel = hiltViewModel()) {
+fun AuthenticationScreen(
+    viewModel: AuthenticationViewModel = koinViewModel()
+) {
     val states = viewModel.states.collectAsState().value
     val context = LocalContext.current
     LaunchedEffect(key1 = states.message) {
