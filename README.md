@@ -387,8 +387,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📋 TODO / Future Enhancements
 
 ### 🔄 Pagination
-- [ ] Implement Paging 3 library integration
-- [ ] Add infinite scrolling for movie lists
+- [x] ~~Implement Paging 3 library integration~~ ✅ Completed
+- [x] ~~Add infinite scrolling for movie lists~~ ✅ Completed
 - [ ] Create reusable pagination components
 - [ ] Add pull-to-refresh functionality
 - [ ] Implement offline-first pagination with Room database
