@@ -21,7 +21,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun MovieTileShimmer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    size: Int = 4
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -33,7 +34,7 @@ fun MovieTileShimmer(
             .padding(16.dp),
         userScrollEnabled = false
     ) {
-        items(4) {
+        items(size) {
             Card(
                 modifier = modifier
                     .width(200.dp)
