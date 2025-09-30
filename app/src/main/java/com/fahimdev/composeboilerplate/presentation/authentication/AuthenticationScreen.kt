@@ -38,7 +38,8 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AuthenticationScreen(
-    viewModel: AuthenticationViewModel = koinViewModel()
+    viewModel: AuthenticationViewModel = koinViewModel(),
+    onSignInSuccess: () -> Unit
 ) {
     val states = viewModel.states.collectAsState().value
     val context = LocalContext.current
@@ -49,6 +50,12 @@ fun AuthenticationScreen(
             }
         }
     }
+    LaunchedEffect(key1 = states.isLoggedIn) {
+        if (states.isLoggedIn) {
+            onSignInSuccess()
+        }
+    }
+
     AuthenticationScreenSkeleton(
         signInWithGoogle = {
             viewModel.onEvent(AuthenticationEvents.SignInWithGoogle)

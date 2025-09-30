@@ -14,7 +14,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.NavBackStack
 import com.fahimdev.composeboilerplate.presentation.base.BaseScreen
 import com.fahimdev.composeboilerplate.presentation.settings.components.AppearanceTheme
@@ -23,13 +22,14 @@ import com.fahimdev.composeboilerplate.presentation.settings.components.Language
 import com.fahimdev.composeboilerplate.presentation.settings.components.ProfileInformation
 import com.fahimdev.composeboilerplate.ui.components.topbar.PrimaryTopBar
 import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SettingsScreen(
     onLanguageSelected: (Languages) -> Unit = {},
     onAppearanceSelected: (AppearanceTheme) -> Unit = {},
     navBackStack: NavBackStack? = null,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = koinViewModel()
 ) {
     var selectedLanguage by remember { mutableStateOf(Languages.ENGLISH) }
     var selectedAppearance by remember { mutableStateOf(AppearanceTheme.LIGHT) }
@@ -45,7 +45,6 @@ fun SettingsScreen(
         onAppearanceSelected = {
             selectedAppearance = it
             onAppearanceSelected(it)
-            viewModel.onThemeChanged(it == AppearanceTheme.DARK)
         })
 }
 

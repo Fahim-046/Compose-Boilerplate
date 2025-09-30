@@ -23,8 +23,8 @@ fun PrimaryTopBar(
     isCenterAligned: Boolean = false,
     trailingIcon: ImageVector? = null,
     onTrailingIconClick: () -> Unit = {},
-    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.surface,
-    contentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
+    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.background,
+    contentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground
 ) {
     val colors = if (isCenterAligned) {
         TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -81,7 +81,8 @@ fun PrimaryTopBar(
                         )
                     }
                 }
-            }
+            },
+            colors = colors
         )
     } else {
         TopAppBar(
@@ -122,7 +123,8 @@ fun PrimaryTopBar(
                         )
                     }
                 }
-            }
+            },
+            colors = colors
         )
     }
 }

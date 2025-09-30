@@ -23,15 +23,23 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val isDarkTheme by viewModel.isDarkModeEnabled.collectAsState()
-            ComposeBoilerplateTheme(darkTheme = isDarkTheme) {
-                NavigationRoot(
-                    onLanguageChange = {
+            val isLoggedIn by viewModel.isUserLoggedIn.collectAsState()
 
-                    },
-                    onAppearanceChange = {
-                        viewModel.onThemeChanged(it == AppearanceTheme.DARK)
-                    }
-                )
+            val darkTheme = isDarkTheme
+            val loggedIn = isLoggedIn
+
+            if (loggedIn != null && darkTheme != null) {
+                ComposeBoilerplateTheme(darkTheme = darkTheme) {
+                    NavigationRoot(
+                        isLoggedIn = loggedIn,
+                        onLanguageChange = {
+
+                        },
+                        onAppearanceChange = {
+                            viewModel.onThemeChanged(it == AppearanceTheme.DARK)
+                        }
+                    )
+                }
             }
         }
     }
