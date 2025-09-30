@@ -7,5 +7,6 @@ data class AuthenticationStates(
     var message: Event<String?>? = null,
     var email: String = "",
     var password: String = "",
-    var isPasswordVisible: Boolean = false
+    var isPasswordVisible: Boolean = false,
+    var isLoggedIn: Boolean = false
 )

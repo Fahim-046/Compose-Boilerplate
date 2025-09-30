@@ -26,10 +26,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun NavigationRoot(
     modifier: Modifier = Modifier,
+    isLoggedIn: Boolean,
     onLanguageChange: (Languages) -> Unit,
     onAppearanceChange: (AppearanceTheme) -> Unit
 ) {
-    val backStack = rememberNavBackStack(Screen.MovieList)
+    val backStack =
+        rememberNavBackStack(if (isLoggedIn) Screen.MovieList else Screen.Authentication)
+
     NavDisplay(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
         backStack = backStack,
@@ -58,7 +61,11 @@ fun NavigationRoot(
                     ) {
                         val viewModel: AuthenticationViewModel = koinViewModel()
                         AuthenticationScreen(
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            onSignInSuccess = {
+                                backStack.removeLastOrNull()
+                                backStack.add(Screen.MovieList)
+                            }
                         )
                     }
                 }

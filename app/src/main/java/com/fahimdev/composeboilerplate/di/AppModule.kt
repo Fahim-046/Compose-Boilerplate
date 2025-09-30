@@ -26,7 +26,7 @@ val appModule = module {
     }
 
     viewModel<AuthenticationViewModel> {
-        AuthenticationViewModel(get())
+        AuthenticationViewModel(authRepository = get(), dataStoreManager = get())
     }
 
     viewModel<SettingsViewModel> {
