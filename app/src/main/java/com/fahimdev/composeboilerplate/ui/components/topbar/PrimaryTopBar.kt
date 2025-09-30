@@ -1,5 +1,6 @@
 package com.fahimdev.composeboilerplate.ui.components.topbar
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 
@@ -22,28 +24,31 @@ fun PrimaryTopBar(
     description: String? = null,
     isCenterAligned: Boolean = false,
     trailingIcon: ImageVector? = null,
-    onTrailingIconClick: () -> Unit = {},
-    containerColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.background,
-    contentColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground
+    onTrailingIconClick: () -> Unit = {}
 ) {
-    val colors = if (isCenterAligned) {
-        TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = containerColor,
-            titleContentColor = contentColor,
-            navigationIconContentColor = contentColor,
-            actionIconContentColor = contentColor
-        )
-    } else {
-        TopAppBarDefaults.topAppBarColors(
-            containerColor = containerColor,
-            titleContentColor = contentColor,
-            navigationIconContentColor = contentColor,
-            actionIconContentColor = contentColor
-        )
-    }
+    val animatedContainerColor by animateColorAsState(
+        targetValue = MaterialTheme.colorScheme.surface,
+        label = "TopBarContainer"
+    )
+    val animatedContentColor by animateColorAsState(
+        targetValue = MaterialTheme.colorScheme.onSurface,
+        label = "TopBarContent"
+    )
+    val animatedDescriptionColor by animateColorAsState(
+        targetValue = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+        label = "TopBarDescription"
+    )
+
+    val colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = animatedContainerColor,
+        titleContentColor = animatedContentColor,
+        navigationIconContentColor = animatedContentColor,
+        actionIconContentColor = animatedContentColor
+    )
 
     if (isCenterAligned) {
         CenterAlignedTopAppBar(
+            colors = colors,
             title = {
                 Column {
                     Text(
@@ -55,7 +60,7 @@ fun PrimaryTopBar(
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodySmall,
-                            color = contentColor.copy(alpha = 0.7f), // Use contentColor parameter consistently
+                            color = animatedDescriptionColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -81,11 +86,11 @@ fun PrimaryTopBar(
                         )
                     }
                 }
-            },
-            colors = colors
+            }
         )
     } else {
         TopAppBar(
+            colors = colors,
             title = {
                 Column {
                     Text(
@@ -97,7 +102,7 @@ fun PrimaryTopBar(
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodySmall,
-                            color = contentColor.copy(alpha = 0.7f), // Use contentColor parameter consistently
+                            color = animatedDescriptionColor,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -123,8 +128,7 @@ fun PrimaryTopBar(
                         )
                     }
                 }
-            },
-            colors = colors
+            }
         )
     }
 }
