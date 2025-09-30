@@ -63,6 +63,9 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    // Paging 3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
     // Koin
     implementation(libs.koin.core)
     implementation(libs.koin.android)

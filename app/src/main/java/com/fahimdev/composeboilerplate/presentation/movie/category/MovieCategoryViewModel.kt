@@ -1,53 +1,40 @@
 package com.fahimdev.composeboilerplate.presentation.movie.category
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.fahimdev.composeboilerplate.presentation.base.BaseViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.category.states.CategoryStates
 import com.fahimdev.composeboilerplate.presentation.movie.list.CategoryType
+import com.fahimdev.data.datasource.remote.paging.MovieCategoryPagingSource
+import com.fahimdev.domain.repository.MovieRepository
 import com.fahimdev.domain.usecase.GetPopularMovieListUseCase
 import com.fahimdev.domain.usecase.GetTrendingMovieListUseCase
 import com.fahimdev.domain.usecase.GetUpcomingMovieListUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class MovieCategoryViewModel(
-    private val getPopularMovieListUseCase: GetPopularMovieListUseCase,
-    private val getTrendingMovieListUseCase: GetTrendingMovieListUseCase,
-    private val getUpcomingMovieListUseCase: GetUpcomingMovieListUseCase,
+    private val movieRepository: MovieRepository
 ) : BaseViewModel() {
     val states = MutableStateFlow(CategoryStates())
 
-    fun getMovies(type: CategoryType) = viewModelScope.launch {
-        when (type) {
-            CategoryType.Popular -> {
-                states.value = states.value.copy(isLoading = true)
-                val movies = getPopularMovieListUseCase.invoke()
-
-                if (movies.isNotEmpty()) {
-                    states.value = states.value.copy(isLoading = false, movies = movies)
-                }
+    fun getMoviesPaging(type: CategoryType) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            val category = when (type) {
+                CategoryType.Popular -> "popular"
+                CategoryType.Trending -> "trending"
+                CategoryType.Upcoming -> "upcoming"
             }
-
-            CategoryType.Trending -> {
-                states.value = states.value.copy(isLoading = true)
-                val movies = getTrendingMovieListUseCase.invoke()
-
-                if (movies.isNotEmpty()) {
-                    states.value = states.value.copy(isLoading = false, movies = movies)
-                }
-            }
-
-            CategoryType.Upcoming -> {
-                states.value = states.value.copy(isLoading = true)
-                val movies = getUpcomingMovieListUseCase.invoke()
-
-                if (movies.isNotEmpty()) {
-                    states.value = states.value.copy(isLoading = false, movies = movies)
-                }
-            }
-
+            MovieCategoryPagingSource(
+                category = category,
+                movieRepository = movieRepository
+            )
         }
-    }
+    ).flow.cachedIn(viewModelScope)
 }
