@@ -37,7 +37,8 @@ val appModule = module {
         MovieCategoryViewModel(
             getPopularMovieListUseCase = get(),
             getTrendingMovieListUseCase = get(),
-            getUpcomingMovieListUseCase = get()
+            getUpcomingMovieListUseCase = get(),
+            movieRepository = get()
         )
     }
 

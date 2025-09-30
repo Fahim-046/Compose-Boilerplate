@@ -28,6 +28,8 @@ lifecycleViewmodelNav3 = "1.0.0-alpha01"
 kotlinSerialization = "2.0.21"
 kotlinxSerializationCore = "1.8.1"
 koin = "4.0.1"
+paging = "3.3.6"
+pagingCompose = "3.3.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,6 +77,10 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koin" }
 koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+
+# Paging 3
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 
 
 
