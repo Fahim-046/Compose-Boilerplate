@@ -62,7 +62,6 @@ fun MovieCategorySkeleton(
             title = type,
             leadingIcon = Icons.AutoMirrored.Filled.ArrowBack,
             onLeadingIconClick = onNavigateBack,
-            contentColor = MaterialTheme.colorScheme.onPrimary
         )
     }) {
         Column(
