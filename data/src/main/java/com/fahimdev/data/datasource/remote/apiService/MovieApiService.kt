@@ -2,6 +2,7 @@ package com.fahimdev.data.datasource.remote.apiService
 
 import com.fahimdev.data.datasource.remote.apiClient.ApiClient
 import com.fahimdev.data.model.MovieApiResponse
+import com.fahimdev.data.model.MovieResponse
 import javax.inject.Inject
 
 class MovieApiService @Inject constructor(
@@ -29,5 +30,9 @@ class MovieApiService @Inject constructor(
                 parameters.append("page", "$page")
             }
         }
+    }
+
+    suspend fun getMovieDetails(id: Int): MovieResponse {
+        return apiClient.get("movie/$id")
     }
 }

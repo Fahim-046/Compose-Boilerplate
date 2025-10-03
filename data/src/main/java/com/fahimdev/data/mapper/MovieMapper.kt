@@ -14,7 +14,7 @@ class MovieMapper {
                 2023
             }
 
-            val genres = mapGenreIdsToNames(response.genre_ids)
+            val genres = mapGenreIdsToNames(response.genre_ids ?: emptyList())
 
             val coverImage = response.poster_path?.let {
                 "https://image.tmdb.org/t/p/w500$it"
