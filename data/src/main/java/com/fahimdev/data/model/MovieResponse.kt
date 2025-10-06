@@ -17,5 +17,5 @@ data class MovieResponse(
     val vote_count: Int,
     val poster_path: String?,
     val backdrop_path: String?,
-    val genre_ids: List<Int>
+    val genre_ids: List<Int>? = null
 )

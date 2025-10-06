@@ -33,6 +33,7 @@ import org.koin.androidx.compose.koinViewModel
 fun MovieListScreen(
     modifier: Modifier = Modifier,
     onViewAllClick: (CategoryType) -> Unit,
+    onMovieClick: (Int) -> Unit,
     navBackStack: NavBackStack? = null,
     viewModel: MovieListViewModel = koinViewModel()
 ) {
@@ -45,6 +46,9 @@ fun MovieListScreen(
         navBackStack = navBackStack,
         onViewAllClick = {
             onViewAllClick(it)
+        },
+        onMovieClick = {
+            onMovieClick(it)
         }
     )
 }
@@ -57,7 +61,8 @@ fun MovieListSkeleton(
     upcomingMovies: List<Movie?>,
     isLoading: Boolean,
     navBackStack: NavBackStack? = null,
-    onViewAllClick: (CategoryType) -> Unit
+    onViewAllClick: (CategoryType) -> Unit,
+    onMovieClick: (Int) -> Unit
 ) {
     BaseScreen(
         title = "CinemaHub",
@@ -110,7 +115,9 @@ fun MovieListSkeleton(
                 }
 
                 item(key = "trending_grid") {
-                    MovieGrid(movies = trendingMovies)
+                    MovieGrid(movies = trendingMovies, onMovieClick = {
+                        onMovieClick(it)
+                    })
                 }
             }
 
@@ -132,7 +139,9 @@ fun MovieListSkeleton(
                 }
 
                 item(key = "popular_grid") {
-                    MovieGrid(movies = popularMovies)
+                    MovieGrid(movies = popularMovies, onMovieClick = {
+                        onMovieClick(it)
+                    })
                 }
             }
 
@@ -154,7 +163,9 @@ fun MovieListSkeleton(
                 }
 
                 item(key = "upcoming_grid") {
-                    MovieGrid(movies = upcomingMovies)
+                    MovieGrid(movies = upcomingMovies, onMovieClick = {
+                        onMovieClick(it)
+                    })
                 }
             }
         }
@@ -170,7 +181,8 @@ private fun MovieListScreenPreview() {
             popularMovies = emptyList(),
             upcomingMovies = emptyList(),
             isLoading = false,
-            onViewAllClick = {}
+            onViewAllClick = {},
+            onMovieClick = {}
         )
     }
 }
@@ -187,7 +199,9 @@ private fun MovieListScreenPreviewDark() {
             popularMovies = emptyList(),
             upcomingMovies = emptyList(),
             isLoading = false,
-            onViewAllClick = {}
+            onViewAllClick = {},
+            onMovieClick = {}
+
         )
     }
 }

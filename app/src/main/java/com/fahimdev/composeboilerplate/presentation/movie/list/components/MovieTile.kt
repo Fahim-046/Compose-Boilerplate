@@ -35,11 +35,18 @@ import com.fahimdev.composeboilerplate.ui.theme.ComposeBoilerplateTheme
 import com.fahimdev.domain.entities.Movie
 
 @Composable
-fun MovieTile(modifier: Modifier = Modifier, movie: Movie?) {
+fun MovieTile(
+    modifier: Modifier = Modifier,
+    movie: Movie?,
+    onMovieClick: (Int) -> Unit = {}
+) {
     Card(
         modifier = modifier
             .width(200.dp)
-            .height(300.dp)
+            .height(300.dp),
+        onClick = {
+            movie?.id?.let { onMovieClick(it) }
+        }
     ) {
         Column {
             AsyncImage(

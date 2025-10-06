@@ -20,7 +20,7 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getUpcomingMovies(): List<Movie?> = withContext(Dispatchers.IO){
+    override suspend fun getUpcomingMovies(): List<Movie?> = withContext(Dispatchers.IO) {
         try {
             val response = movieApiService.getUpcomingMovies()
             response.results.map(MovieMapper::mapResponseToDomain)
@@ -38,21 +38,25 @@ class MovieRepositoryImpl(
         }
     }
 
-    override suspend fun getMoviesByCategory(category: String, page: Int): List<Movie?> = withContext(Dispatchers.IO) {
-        try {
-            val response = when (category) {
-                "popular" -> movieApiService.getPopularMovies(page)
-                "upcoming" -> movieApiService.getUpcomingMovies(page)
-                "trending" -> movieApiService.getTrendingMovies(page)
-                else -> throw IllegalArgumentException("Invalid category: $category")
+    override suspend fun getMoviesByCategory(category: String, page: Int): List<Movie?> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response = when (category) {
+                    "popular" -> movieApiService.getPopularMovies(page)
+                    "upcoming" -> movieApiService.getUpcomingMovies(page)
+                    "trending" -> movieApiService.getTrendingMovies(page)
+                    else -> throw IllegalArgumentException("Invalid category: $category")
+                }
+                response.results.map(MovieMapper::mapResponseToDomain)
+            } catch (e: Exception) {
+                emptyList()
             }
-            response.results.map(MovieMapper::mapResponseToDomain)
-        } catch (e: Exception) {
-            emptyList()
         }
-    }
 
-    override suspend fun getMoviesByCategoryPaginated(category: String, page: Int): PaginatedResult<Movie> = withContext(Dispatchers.IO) {
+    override suspend fun getMoviesByCategoryPaginated(
+        category: String,
+        page: Int
+    ): PaginatedResult<Movie> = withContext(Dispatchers.IO) {
         val response = when (category) {
             "popular" -> movieApiService.getPopularMovies(page)
             "upcoming" -> movieApiService.getUpcomingMovies(page)
@@ -68,6 +72,11 @@ class MovieRepositoryImpl(
             totalPages = response.total_pages,
             hasNextPage = response.page < response.total_pages
         )
+    }
+
+    override suspend fun getMovieDetails(id: Int): Movie? = withContext(Dispatchers.IO) {
+        val movie = movieApiService.getMovieDetails(id)
+        MovieMapper.mapResponseToDomain(movie)
     }
 
 

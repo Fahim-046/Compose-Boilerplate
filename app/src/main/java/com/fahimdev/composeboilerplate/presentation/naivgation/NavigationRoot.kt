@@ -15,6 +15,8 @@ import com.fahimdev.composeboilerplate.presentation.authentication.Authenticatio
 import com.fahimdev.composeboilerplate.presentation.authentication.AuthenticationViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryScreen
 import com.fahimdev.composeboilerplate.presentation.movie.category.MovieCategoryViewModel
+import com.fahimdev.composeboilerplate.presentation.movie.details.MovieDetailsScreen
+import com.fahimdev.composeboilerplate.presentation.movie.details.MovieDetailsViewModel
 import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListScreen
 import com.fahimdev.composeboilerplate.presentation.movie.list.MovieListViewModel
 import com.fahimdev.composeboilerplate.presentation.settings.SettingsScreen
@@ -31,7 +33,7 @@ fun NavigationRoot(
     onAppearanceChange: (AppearanceTheme) -> Unit
 ) {
     val backStack =
-        rememberNavBackStack(if (isLoggedIn) Screen.MovieList else Screen.Authentication)
+        rememberNavBackStack(Screen.MovieList)
 
     NavDisplay(
         modifier = modifier.background(MaterialTheme.colorScheme.background),
@@ -50,6 +52,9 @@ fun NavigationRoot(
                         MovieListScreen(
                             onViewAllClick = {
                                 backStack.add(Screen.MovieCategory(it))
+                            },
+                            onMovieClick = {
+                                backStack.add(Screen.MovieDetails(it))
                             }
                         )
                     }
@@ -79,7 +84,25 @@ fun NavigationRoot(
                             onViewAllClick = {
                                 backStack.add(Screen.MovieCategory(it))
                             },
+                            onMovieClick = {
+                                backStack.add(Screen.MovieDetails(it))
+                            },
                             navBackStack = backStack,
+                            viewModel = viewModel
+                        )
+                    }
+                }
+
+                is Screen.MovieDetails -> {
+                    NavEntry(
+                        key = key
+                    ) {
+                        val viewModel: MovieDetailsViewModel = koinViewModel()
+                        MovieDetailsScreen(
+                            id = key.id,
+                            onBackArrowClick = {
+                                backStack.removeLastOrNull()
+                            },
                             viewModel = viewModel
                         )
                     }

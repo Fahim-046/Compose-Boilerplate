@@ -16,6 +16,7 @@ import com.fahimdev.domain.entities.Movie
 @Composable
 fun MovieGrid(
     movies: List<Movie?>,
+    onMovieClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -29,8 +30,11 @@ fun MovieGrid(
             ) {
                 rowMovies.forEach { movie ->
                     MovieTile(
+                        modifier = Modifier.weight(1f),
                         movie = movie,
-                        modifier = Modifier.weight(1f)
+                        onMovieClick = { movieId ->
+                            onMovieClick(movieId)
+                        }
                     )
                 }
                 if (rowMovies.size == 1) {
@@ -45,7 +49,10 @@ fun MovieGrid(
 @Composable
 private fun MovieGridPreview() {
     ComposeBoilerplateTheme {
-        MovieGrid(movies = listOf())
+        MovieGrid(
+            movies = listOf(),
+            onMovieClick = {}
+        )
     }
 }
 
@@ -53,6 +60,9 @@ private fun MovieGridPreview() {
 @Composable
 private fun MovieGridPreviewDark() {
     ComposeBoilerplateTheme(darkTheme = true) {
-        MovieGrid(movies = listOf())
+        MovieGrid(
+            movies = listOf(),
+            onMovieClick = {}
+        )
     }
 }
