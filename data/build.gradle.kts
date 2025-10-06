@@ -32,7 +32,47 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    flavorDimensions += "env"
+
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.dev", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.dev", "")}\"")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id.dev", "")}\"")
+            buildConfigField("String", "ENVIRONMENT", "\"dev\"")
+        }
+        create("qa") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.qa", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.qa", "")}\"")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id.qa", "")}\"")
+            buildConfigField("String", "ENVIRONMENT", "\"qa\"")
+        }
+        create("staging") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.staging", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.staging", "")}\"")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id.staging", "")}\"")
+            buildConfigField("String", "ENVIRONMENT", "\"staging\"")
+        }
+        create("prod") {
+            dimension = "env"
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key", "")}\"")
+            buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id", "")}\"")
+            buildConfigField("String", "ENVIRONMENT", "\"production\"")
+        }
+    }
+
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
