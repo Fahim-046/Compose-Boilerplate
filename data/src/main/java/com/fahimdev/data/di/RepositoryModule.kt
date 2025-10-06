@@ -1,6 +1,7 @@
 package com.fahimdev.data.di
 
 import com.fahimdev.core.manager.FirebaseAuthManager
+import com.fahimdev.data.BuildConfig
 import com.fahimdev.data.datasource.remote.apiClient.ApiClient
 import com.fahimdev.data.datasource.remote.apiService.MovieApiService
 import com.fahimdev.data.repository.AuthRepositoryImpl
@@ -11,7 +12,10 @@ import org.koin.dsl.module
 
 val repoModule = module {
     single {
-        ApiClient()
+        ApiClient(
+            baseUrl = BuildConfig.BASE_URL,
+            apiKey = BuildConfig.API_KEY
+        )
     }
 
     single {
@@ -27,7 +31,7 @@ val repoModule = module {
             dataStoreManager = get(),
             firebaseAuthManager = FirebaseAuthManager,
             context = get(),
-            googleApiKey = "880395694721-r8gg987t3p1dbim2m8kr29mfracpojli.apps.googleusercontent.com"
+            googleApiKey = BuildConfig.GOOGLE_WEB_CLIENT_ID
         )
     }
 }
