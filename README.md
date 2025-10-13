@@ -59,18 +59,18 @@ ComposeBoilerplate/
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| **UI Framework** | Jetpack Compose |
+| Category | Technology               |
+|----------|--------------------------|
+| **UI Framework** | Jetpack Compose          |
 | **Architecture** | Clean Architecture + MVI |
-| **DI** | Hilt |
-| **Navigation** | Navigation Compose 3 |
-| **Networking** | Ktor Client + OkHttp |
-| **Local Storage** | DataStore |
-| **Authentication** | Firebase Auth |
-| **Image Loading** | Coil |
-| **Logging** | Timber |
-| **Testing** | JUnit, Espresso |
+| **DI** | Koin                     |
+| **Navigation** | Navigation Compose 3     |
+| **Networking** | Ktor Client + OkHttp     |
+| **Local Storage** | DataStore                |
+| **Authentication** | Firebase Auth            |
+| **Image Loading** | Coil                     |
+| **Logging** | Timber                   |
+| **Testing** | JUnit, Espresso          |
 
 ## 🚀 Getting Started
 
