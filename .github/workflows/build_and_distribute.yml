@@ -40,6 +40,9 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: ./gradlew assembleProdRelease
 
+      - name: List APK outputs (debug step)
+        run: ls -R app/build/outputs/apk/
+
       - name: Upload to Firebase
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
