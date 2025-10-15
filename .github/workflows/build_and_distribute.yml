@@ -36,8 +36,8 @@ jobs:
         env:
           KEYSTORE_FILE: app/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
         run: ./gradlew assembleProdRelease
 
       - name: List APK outputs (debug step)
