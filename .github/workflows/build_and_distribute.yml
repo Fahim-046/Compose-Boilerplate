@@ -40,6 +40,7 @@ jobs:
         if: success()
         uses: slackApi/slack-github-action@v2
         with:
+          webhook-type: incoming-webhook
           payload: |
             {
               "text": ":tada: *Build and Distribution Workflow Build Succeeded!* :white_check_mark:\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}\n*Triggered by:* ${{ github.actor }}"
