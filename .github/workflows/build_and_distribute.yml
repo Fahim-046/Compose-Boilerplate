@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     name: Build and Test
@@ -57,8 +60,8 @@ jobs:
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
 
           if [ -z "$LATEST_TAG" ]; then
-            echo "⚠️ No previous tag found. Starting from v0.0.0"
-            LATEST_TAG="v0.0.0"
+            echo "⚠️ No previous tag found. Starting from v1.0.0"
+            LATEST_TAG="v1.0.0"
             INITIAL_RELEASE=true
           else
             INITIAL_RELEASE=false
