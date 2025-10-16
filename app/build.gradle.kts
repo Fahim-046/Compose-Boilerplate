@@ -65,8 +65,6 @@ android {
                     storePassword = localProperties.getProperty("keystore.password")
                     keyAlias = localProperties.getProperty("prod.key.alias")
                     keyPassword = localProperties.getProperty("prod.key.password")
-                } else {
-                    println("No keystore found. Release build may be unsigned locally.")
                 }
             }
         }
@@ -83,7 +81,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            // Only apply signing config if keystore exists
+            val releaseSigningConfig = signingConfigs.getByName("release")
+            if (releaseSigningConfig.storeFile != null && releaseSigningConfig.storeFile!!.exists()) {
+                signingConfig = releaseSigningConfig
+            }
         }
     }
 
