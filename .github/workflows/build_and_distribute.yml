@@ -22,6 +22,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Grant Execute Permission For Gradle
+        run: chmod +x gradlew
+
       - name: Decode Google Service Json
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
@@ -32,15 +35,13 @@ jobs:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
-          echo "KEYSTORE_FILE=${{ github.workspace }}/app/keystore.jks" >> $GITHUB_ENV
 
       - name: Build Prod Release APK
-
         env:
-          KEYSTORE_FILE: app/keystore.jks
+          KEYSTORE_FILE: ${{ github.workspace }}/app/keystore.jks
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
+          PROD_KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
+          PROD_KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
         run: ./gradlew assembleProdRelease
 
       - name: List APK outputs (debug step)
@@ -56,15 +57,6 @@ jobs:
             --groups "testers" \
             --release-notes "New release build from GitHub Actions - Commit: ${{ github.sha }}"
 
-      - name: Grant Execute Permission For Gradle
-        run: chmod +x gradlew
-
-      - name: Build Debug APK
-        env:
-          PROD_BASE_URL: ${{ secrets.PROD_BASE_URL }}
-          PROD_API_KEY: ${{ secrets.PROD_API_KEY }}
-        run: ./gradlew assembleProdDebug
-
       - name: Notify Slack
         if: success()
         uses: slackApi/slack-github-action@v2
@@ -75,4 +67,4 @@ jobs:
               "text": ":tada: *Build Succeeded!* :white_check_mark:\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}\n*Triggered by:* ${{ github.actor }}"
             }
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEB_HOOK }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEB_HOOK }}
