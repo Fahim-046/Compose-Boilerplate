@@ -62,8 +62,8 @@ android {
         }
         create("prod") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url", "")}\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key", "")}\"")
+            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.prod", "")}\"")
+            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.prod", "")}\"")
             buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id", "")}\"")
             buildConfigField("String", "ENVIRONMENT", "\"production\"")
         }

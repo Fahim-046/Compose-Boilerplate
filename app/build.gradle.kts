@@ -13,7 +13,7 @@ plugins {
 
 fun loadLocalProperties(): Properties {
     val properties = Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
+    val localPropertiesFile = rootProject.file("local.properties") // Changed path to root directory
     if (localPropertiesFile.exists()) {
         FileInputStream(localPropertiesFile).use { fis ->
             properties.load(fis)
@@ -23,6 +23,14 @@ fun loadLocalProperties(): Properties {
 }
 
 val localProperties = loadLocalProperties()
+
+fun getApiProperty(key: String, flavor: String): String {
+    // priority: environment variable > local.properties > default empty
+    val envKey = "${key.uppercase().replace(".", "_")}_${flavor.uppercase()}" // e.g., API_BASE_URL_PROD
+    return System.getenv(envKey)
+        ?: localProperties.getProperty("$key.$flavor")
+        ?: ""
+}
 
 android {
     namespace = "com.fahimdev.composeboilerplate"
@@ -34,10 +42,37 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"${localProperties.getProperty("google.web.client.id", "")}\"")
+        buildConfigField(
+            "String",
+            "GOOGLE_WEB_CLIENT_ID",
+            "\"${localProperties.getProperty("google.web.client.id", "")}\""
+        )
+    }
+
+    signingConfigs {
+        create("release") {
+            val keystoreEnv = System.getenv("KEYSTORE_FILE")
+            val keystoreFile = if (keystoreEnv != null) file(keystoreEnv) else null
+
+            if (keystoreFile != null) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("PROD_KEY_ALIAS")
+                keyPassword = System.getenv("PROD_KEY_PASSWORD")
+            } else {
+                val keystorePath = localProperties.getProperty("keystore.file") ?: ""
+                if (keystorePath.isNotEmpty()) {
+                    storeFile = file(keystorePath)
+                    storePassword = localProperties.getProperty("keystore.password")
+                    keyAlias = localProperties.getProperty("prod.key.alias")
+                    keyPassword = localProperties.getProperty("prod.key.password")
+                } else {
+                    println("⚠️ No keystore found. Release build may be unsigned locally.")
+                }
+            }
+        }
     }
 
     buildTypes {
@@ -51,46 +86,25 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
     flavorDimensions += "env"
 
     productFlavors {
-        create("dev") {
-            dimension = "env"
-            applicationIdSuffix = ".dev"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.dev", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.dev", ""))
-            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.dev", "")}\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.dev", "")}\"")
+        listOf("dev", "qa", "staging", "prod").forEach { flavor ->
+            create(flavor) {
+                dimension = "env"
+                if (flavor != "prod") applicationIdSuffix = ".$flavor"
 
-        }
-        create("qa") {
-            dimension = "env"
-            applicationIdSuffix = ".qa"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.qa", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.qa", ""))
-            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.qa", "")}\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.qa", "")}\"")
+                val baseUrl = getApiProperty("api.base.url", flavor)
+                val apiKey = getApiProperty("api.key", flavor)
 
-        }
-        create("staging") {
-            dimension = "env"
-            applicationIdSuffix = ".staging"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.staging", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.staging", ""))
-            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.staging", "")}\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.staging", "")}\"")
 
-        }
-        create("prod") {
-            dimension = "env"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.prod", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.prod", ""))
-            buildConfigField("String", "BASE_URL", "\"${localProperties.getProperty("api.base.url.prod", "")}\"")
-            buildConfigField("String", "API_KEY", "\"${localProperties.getProperty("api.key.prod", "")}\"")
-
+                buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            }
         }
     }
 
@@ -99,9 +113,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlinOptions { jvmTarget = "11" }
 
     buildFeatures {
         compose = true
