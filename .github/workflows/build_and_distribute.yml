@@ -79,8 +79,8 @@ jobs:
           PATCH=$((PATCH + 1))
           NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
 
-          # If tag already exists, bump until unique
-          while git rev-parse "$NEW_TAG" >/dev/null 2>&1; do
+          # ✅ Keep incrementing until unique both locally and remotely
+          while git rev-parse "$NEW_TAG" >/dev/null 2>&1 || git ls-remote --exit-code origin "refs/tags/$NEW_TAG" >/dev/null 2>&1; do
             PATCH=$((PATCH + 1))
             NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
           done
