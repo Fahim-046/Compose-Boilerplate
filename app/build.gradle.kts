@@ -49,18 +49,18 @@ android {
     signingConfigs {
         create("release") {
             val keystoreEnv = System.getenv("KEYSTORE_FILE")
-            val keystoreFromEnv = if (keystoreEnv != null && File(keystoreEnv).exists()) file(keystoreEnv) else null
+            val keystoreFile = if (keystoreEnv != null) file(keystoreEnv) else null
 
-            if (keystoreFromEnv != null) {
+            if (keystoreFile != null) {
                 // For CI/CD (GitHub Actions)
-                storeFile = keystoreFromEnv
+                storeFile = keystoreFile
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("PROD_KEY_ALIAS")
                 keyPassword = System.getenv("PROD_KEY_PASSWORD")
             } else {
                 // For local builds (optional)
                 val keystorePath = localProperties.getProperty("keystore.file") ?: ""
-                if (keystorePath.isNotEmpty() && File(keystorePath).exists()) {
+                if (keystorePath.isNotEmpty()) {
                     storeFile = file(keystorePath)
                     storePassword = localProperties.getProperty("keystore.password")
                     keyAlias = localProperties.getProperty("prod.key.alias")
@@ -81,11 +81,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Only apply signing config if keystore exists
-            val releaseSigningConfig = signingConfigs.getByName("release")
-            if (releaseSigningConfig.storeFile != null && releaseSigningConfig.storeFile!!.exists()) {
-                signingConfig = releaseSigningConfig
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
