@@ -70,63 +70,75 @@ jobs:
 
       - name: Notify Slack
         if: success()
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "🚀 New Build Distributed",
-                    "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Version:*\n${{ steps.version.outputs.name }} (${{ steps.version.outputs.code }})"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:*\n${{ github.ref_name }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Triggered by:*\n${{ github.actor }}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:*\n${{ steps.commit.outputs.message }}"
-                    }
-                  ]
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View in Firebase Console"
-                      },
-                      "url": "https://console.firebase.google.com/project/compose-boilerplate/appdistribution"
-                    },
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Commit"
-                      },
-                      "url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-                    }
-                  ]
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk -F'"' '{print $2}')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk -F'= ' '{print $2}' | head -n 1)
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B | head -n 1)
+          ACTOR=${GITHUB_ACTOR}
+          
+          # ✅ Detect correct branch name
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            BRANCH_NAME=$(jq -r .pull_request.head.ref < "$GITHUB_EVENT_PATH")
+          else
+            BRANCH_NAME=${GITHUB_REF_NAME}
+          fi
+          
+          PAYLOAD=$(cat <<EOF
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🚀 New Build Distributed",
+                  "emoji": true
                 }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEB_HOOK }}
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Version:*\n${VERSION_NAME} (${VERSION_CODE})"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${BRANCH_NAME}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Triggered by:*\n${ACTOR}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Commit:*\n${COMMIT_MESSAGE}"
+                  }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View in Firebase Console"
+                    },
+                    "url": "https://console.firebase.google.com/project/compose-boilerplate/appdistribution"
+                  },
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Commit"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+          
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.SLACK_WEB_HOOK }}
