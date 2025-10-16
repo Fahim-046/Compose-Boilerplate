@@ -1,0 +1,195 @@
+name: Build and Distribute
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant Execute Permission For Gradle
+        run: chmod +x gradlew
+
+      - name: Decode Google Service Json
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: echo "$GOOGLE_SERVICES_JSON" | base64 --decode > app/google-services.json
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
+
+      - name: Create local.properties file
+        env:
+          APP_BUILD_VARIANT: prod
+          API_BASE_URL: ${{ secrets.PROD_BASE_URL }}
+          API_KEY: ${{ secrets.PROD_API_KEY }}
+        run: |
+          echo "api.base.url.prod=${API_BASE_URL}" > local.properties
+          echo "api.key.prod=${API_KEY}" >> local.properties
+
+      - name: Auto-generate and push version tag
+        id: tag
+        run: |
+          # Ensure all commits and tags are available (works for both shallow/full clones)
+          if git rev-parse --is-shallow-repository >/dev/null 2>&1 && git rev-parse --is-shallow-repository | grep -q true; then
+            git fetch --prune --unshallow --tags
+          else
+            git fetch --prune --tags
+          fi
+
+          # Detect the latest existing tag (or start at v1.0.0)
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            echo "⚠️ No previous tag found. Starting from v1.0.0"
+            LATEST_TAG="v1.0.0"
+            INITIAL_RELEASE=true
+          else
+            INITIAL_RELEASE=false
+          fi
+
+          echo "Previous tag: $LATEST_TAG"
+
+          # Parse and bump version number (PATCH)
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          PATCH=${PATCH:-0}
+          PATCH=$((PATCH + 1))
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+
+          # If tag already exists, bump until unique
+          while git rev-parse "$NEW_TAG" >/dev/null 2>&1; do
+            PATCH=$((PATCH + 1))
+            NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          done
+
+          echo "🆕 New tag: $NEW_TAG"
+
+          # Generate a changelog from commits since last tag
+          echo "## Changelog" > changelog.txt
+          if [ "$INITIAL_RELEASE" = true ]; then
+            git log --pretty=format:"- %s (%h)" >> changelog.txt
+          else
+            git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" >> changelog.txt
+          fi
+          cat changelog.txt
+
+          # Configure Git user for tagging
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          # Create annotated tag with changelog message
+          TAG_MESSAGE="Release $NEW_TAG\n\n$(cat changelog.txt)"
+          git tag -a "$NEW_TAG" -m "$TAG_MESSAGE"
+
+          # Push new tag to remote
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} "$NEW_TAG"
+
+          echo "latest=$LATEST_TAG" >> $GITHUB_OUTPUT
+          echo "new=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      - name: Build Prod Release APK
+        env:
+          KEYSTORE_FILE: ${{ github.workspace }}/app/keystore.jks
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          PROD_KEY_ALIAS: ${{ secrets.PROD_KEY_ALIAS }}
+          PROD_KEY_PASSWORD: ${{ secrets.PROD_KEY_PASSWORD }}
+        run: ./gradlew assembleProdRelease
+
+      - name: List APK outputs
+        run: ls -R app/build/outputs/apk/
+
+      - name: Upload to Firebase
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          npx firebase-tools appdistribution:distribute \
+            app/build/outputs/apk/prod/release/app-prod-release.apk \
+            --app ${{ secrets.FIREBASE_APP_ID }} \
+            --release-notes "$(cat changelog.txt)"
+
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log -1 --pretty=%B | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Get version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk -F'"' '{print $2}')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk -F'= ' '{print $2}' | head -n 1)
+          echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
+      - name: Notify Slack
+        if: success()
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk -F'"' '{print $2}')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk -F'= ' '{print $2}' | head -n 1)
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B | head -n 1)
+          ACTOR=${GITHUB_ACTOR}
+          BRANCH_NAME=${GITHUB_REF_NAME}
+          NEW_TAG=${{ steps.tag.outputs.new }}
+          CHANGELOG=$(cat changelog.txt)
+
+          PAYLOAD=$(cat <<EOF
+          {
+            "blocks": [
+              {
+                "type": "header",
+                "text": { "type": "plain_text", "text": "🚀 New Build Distributed", "emoji": true }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  { "type": "mrkdwn", "text": "*Version:*\n${VERSION_NAME} (${VERSION_CODE})" },
+                  { "type": "mrkdwn", "text": "*Tag:*\n${NEW_TAG}" },
+                  { "type": "mrkdwn", "text": "*Branch:*\n${BRANCH_NAME}" },
+                  { "type": "mrkdwn", "text": "*Triggered by:*\n${ACTOR}" }
+                ]
+              },
+              {
+                "type": "section",
+                "text": { "type": "mrkdwn", "text": "*Changelog:*\n${CHANGELOG}" }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": { "type": "plain_text", "text": "View in Firebase Console" },
+                    "url": "https://console.firebase.google.com/project/compose-boilerplate/appdistribution"
+                  },
+                  {
+                    "type": "button",
+                    "text": { "type": "plain_text", "text": "View Tag" },
+                    "url": "https://github.com/${{ github.repository }}/releases/tag/${NEW_TAG}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          )
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.SLACK_WEB_HOOK }}
