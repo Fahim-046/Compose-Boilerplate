@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # important to access all tags for comparison
+          fetch-depth: 0
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -50,15 +50,30 @@ jobs:
       - name: Generate new version tag
         id: tag
         run: |
+          # Fetch all tags (for older repos)
           git fetch --tags
 
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          # Try to get latest tag, fallback to none
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "⚠️ No previous tag found. Starting from v0.0.0"
+            LATEST_TAG="v0.0.0"
+            INITIAL_RELEASE=true
+          else
+            INITIAL_RELEASE=false
+          fi
 
           echo "Previous tag: $LATEST_TAG"
 
+          # Extract numeric version
           VERSION=${LATEST_TAG#v}
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
+          # Handle empty patch case
+          PATCH=${PATCH:-0}
+
+          # Increment patch version
           PATCH=$((PATCH + 1))
           NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
 
@@ -67,11 +82,17 @@ jobs:
           echo "latest=$LATEST_TAG" >> $GITHUB_OUTPUT
           echo "new=$NEW_TAG" >> $GITHUB_OUTPUT
 
+          # ✅ Generate changelog safely
           echo "## Changelog" > changelog.txt
-          git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" >> changelog.txt
+          if [ "$INITIAL_RELEASE" = true ]; then
+            git log --pretty=format:"- %s (%h)" >> changelog.txt
+          else
+            git log ${LATEST_TAG}..HEAD --pretty=format:"- %s (%h)" >> changelog.txt
+          fi
 
           cat changelog.txt
 
+          # ✅ Create and push new tag
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git tag -a "$NEW_TAG" -m "Release $NEW_TAG"
@@ -109,7 +130,6 @@ jobs:
           echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
           echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
-      # 🧩 NEW: Post to Slack with tag info and changelog
       - name: Notify Slack
         if: success()
         run: |
