@@ -54,17 +54,79 @@ jobs:
           npx firebase-tools appdistribution:distribute \
             app/build/outputs/apk/prod/release/app-prod-release.apk \
             --app ${{ secrets.FIREBASE_APP_ID }} \
-            --groups "testers" \
             --release-notes "New release build from GitHub Actions - Commit: ${{ github.sha }}"
+
+      - name: Get commit message
+        id: commit
+        run: echo "message=$(git log -1 --pretty=%B | head -n 1)" >> $GITHUB_OUTPUT
+
+      - name: Get version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk -F'"' '{print $2}')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk -F'= ' '{print $2}' | head -n 1)
+          echo "name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
 
       - name: Notify Slack
         if: success()
-        uses: slackApi/slack-github-action@v2
+        uses: slackapi/slack-github-action@v2
         with:
           webhook-type: incoming-webhook
           payload: |
             {
-              "text": ":tada: *Build Succeeded!* :white_check_mark:\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref_name }}\n*Commit:* ${{ github.sha }}\n*Triggered by:* ${{ github.actor }}"
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "🚀 New Build Distributed",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Version:*\n${{ steps.version.outputs.name }} (${{ steps.version.outputs.code }})"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Triggered by:*\n${{ github.actor }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:*\n${{ steps.commit.outputs.message }}"
+                    }
+                  ]
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View in Firebase Console"
+                      },
+                      "url": "https://console.firebase.google.com/project/compose-boilerplate/appdistribution"
+                    },
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Commit"
+                      },
+                      "url": "https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+                    }
+                  ]
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEB_HOOK }}
