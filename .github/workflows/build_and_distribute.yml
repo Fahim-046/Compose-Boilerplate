@@ -36,6 +36,11 @@ jobs:
         run: |
           echo "$KEYSTORE_BASE64" | base64 --decode > app/keystore.jks
 
+      - name: Generate local.properties
+        run: |
+          echo "BASE_URL=${{ secrets.PROD_BASE_URL }}" >> local.properties
+          echo "API_KEY=${{ secrets.PROD_API_KEY }}" >> local.properties
+
       - name: Build Prod Release APK
         env:
           KEYSTORE_FILE: ${{ github.workspace }}/app/keystore.jks
@@ -76,7 +81,6 @@ jobs:
           COMMIT_MESSAGE=$(git log -1 --pretty=%B | head -n 1)
           ACTOR=${GITHUB_ACTOR}
           
-          # ✅ Detect correct branch name
           if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
             BRANCH_NAME=$(jq -r .pull_request.head.ref < "$GITHUB_EVENT_PATH")
           else
