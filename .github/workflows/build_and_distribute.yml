@@ -41,6 +41,9 @@ jobs:
           echo "api.base.url.prod=${{ secrets.API_BASE_URL_PROD }}" >> local.properties
           echo "api.key.prod=${{ secrets.API_KEY_PROD }}" >> local.properties
 
+      - name: Verify local.properties content
+        run: cat local.properties
+
       - name: Build Prod Release APK
         env:
           KEYSTORE_FILE: ${{ github.workspace }}/app/keystore.jks
