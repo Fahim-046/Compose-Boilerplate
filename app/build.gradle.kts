@@ -13,7 +13,7 @@ plugins {
 
 fun loadLocalProperties(): Properties {
     val properties = Properties()
-    val localPropertiesFile = rootProject.file("app/local.properties")
+    val localPropertiesFile = rootProject.file("local.properties") // Changed path to root directory
     if (localPropertiesFile.exists()) {
         FileInputStream(localPropertiesFile).use { fis ->
             properties.load(fis)
@@ -101,8 +101,6 @@ android {
                 val baseUrl = getApiProperty("api.base.url", flavor)
                 val apiKey = getApiProperty("api.key", flavor)
 
-                resValue("string", "api_base_url", baseUrl)
-                resValue("string", "api_key", apiKey)
 
                 buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
                 buildConfigField("String", "API_KEY", "\"$apiKey\"")

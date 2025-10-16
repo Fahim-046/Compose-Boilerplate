@@ -43,8 +43,8 @@ jobs:
           API_KEY: ${{ secrets.PROD_API_KEY }}
 
         run: |
-          echo "api.base.url=${API_BASE_URL}" > local.properties
-          echo "api.key=${API_KEY}" >> local.properties
+          echo "api.base.url.prod=${API_BASE_URL}" > local.properties
+          echo "api.key.prod=${API_KEY}" >> local.properties
     
 
       - name: Build Prod Release APK
