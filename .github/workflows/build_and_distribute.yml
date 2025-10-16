@@ -38,8 +38,8 @@ jobs:
 
       - name: Generate local.properties
         run: |
-          echo "api.base.url.prod=${{ secrets.API_BASE_URL_PROD }}" >> local.properties
-          echo "api.key.prod=${{ secrets.API_KEY_PROD }}" >> local.properties
+          echo "api.base.url.prod=${{ secrets.PROD_BASE_URL }}" >> local.properties
+          echo "api.key.prod=${{ secrets.PROD_API_KEY }}" >> local.properties
 
       - name: Verify local.properties content
         run: cat local.properties
