@@ -1,5 +1,3 @@
-import org.apache.commons.logging.LogFactory.release
-import org.gradle.kotlin.dsl.release
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -15,7 +13,7 @@ plugins {
 
 fun loadLocalProperties(): Properties {
     val properties = Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
+    val localPropertiesFile = rootProject.file("app/local.properties")
     if (localPropertiesFile.exists()) {
         FileInputStream(localPropertiesFile).use { fis ->
             properties.load(fis)
@@ -25,6 +23,14 @@ fun loadLocalProperties(): Properties {
 }
 
 val localProperties = loadLocalProperties()
+
+fun getApiProperty(key: String, flavor: String): String {
+    // priority: environment variable > local.properties > default empty
+    val envKey = "${key.uppercase().replace(".", "_")}_${flavor.uppercase()}" // e.g., API_BASE_URL_PROD
+    return System.getenv(envKey)
+        ?: localProperties.getProperty("$key.$flavor")
+        ?: ""
+}
 
 android {
     namespace = "com.fahimdev.composeboilerplate"
@@ -36,7 +42,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField(
@@ -63,6 +68,8 @@ android {
                     storePassword = localProperties.getProperty("keystore.password")
                     keyAlias = localProperties.getProperty("prod.key.alias")
                     keyPassword = localProperties.getProperty("prod.key.password")
+                } else {
+                    println("⚠️ No keystore found. Release build may be unsigned locally.")
                 }
             }
         }
@@ -86,76 +93,20 @@ android {
     flavorDimensions += "env"
 
     productFlavors {
-        create("dev") {
-            dimension = "env"
-            applicationIdSuffix = ".dev"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.dev", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.dev", ""))
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${localProperties.getProperty("api.base.url.dev", "")}\""
-            )
-            buildConfigField(
-                "String",
-                "API_KEY",
-                "\"${localProperties.getProperty("api.key.dev", "")}\""
-            )
+        listOf("dev", "qa", "staging", "prod").forEach { flavor ->
+            create(flavor) {
+                dimension = "env"
+                if (flavor != "prod") applicationIdSuffix = ".$flavor"
 
-        }
-        create("qa") {
-            dimension = "env"
-            applicationIdSuffix = ".qa"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.qa", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.qa", ""))
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${localProperties.getProperty("api.base.url.qa", "")}\""
-            )
-            buildConfigField(
-                "String",
-                "API_KEY",
-                "\"${localProperties.getProperty("api.key.qa", "")}\""
-            )
+                val baseUrl = getApiProperty("api.base.url", flavor)
+                val apiKey = getApiProperty("api.key", flavor)
 
-        }
-        create("staging") {
-            dimension = "env"
-            applicationIdSuffix = ".staging"
-            resValue(
-                "string",
-                "api_base_url",
-                localProperties.getProperty("api.base.url.staging", "")
-            )
-            resValue("string", "api_key", localProperties.getProperty("api.key.staging", ""))
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${localProperties.getProperty("api.base.url.staging", "")}\""
-            )
-            buildConfigField(
-                "String",
-                "API_KEY",
-                "\"${localProperties.getProperty("api.key.staging", "")}\""
-            )
+                resValue("string", "api_base_url", baseUrl)
+                resValue("string", "api_key", apiKey)
 
-        }
-        create("prod") {
-            dimension = "env"
-            resValue("string", "api_base_url", localProperties.getProperty("api.base.url.prod", ""))
-            resValue("string", "api_key", localProperties.getProperty("api.key.prod", ""))
-            buildConfigField(
-                "String",
-                "BASE_URL",
-                "\"${localProperties.getProperty("api.base.url.prod", "")}\""
-            )
-            buildConfigField(
-                "String",
-                "API_KEY",
-                "\"${localProperties.getProperty("api.key.prod", "")}\""
-            )
-
+                buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+                buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            }
         }
     }
 
@@ -164,9 +115,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+    kotlinOptions { jvmTarget = "11" }
 
     buildFeatures {
         compose = true
