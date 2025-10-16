@@ -53,8 +53,12 @@ jobs:
       - name: Auto-generate and push version tag
         id: tag
         run: |
-          # Ensure all commits and tags are available
-          git fetch --prune --unshallow --tags
+          # Ensure all commits and tags are available (works for both shallow/full clones)
+          if git rev-parse --is-shallow-repository >/dev/null 2>&1 && git rev-parse --is-shallow-repository | grep -q true; then
+            git fetch --prune --unshallow --tags
+          else
+            git fetch --prune --tags
+          fi
 
           # Detect the latest existing tag (or start at v1.0.0)
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
